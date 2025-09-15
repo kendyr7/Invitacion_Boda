@@ -347,3 +347,4 @@ export default function InvitationPageClient({ params }: { params: { count: stri
       )}
     </main>
   );
+}

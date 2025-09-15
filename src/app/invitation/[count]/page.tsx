@@ -21,4 +21,5 @@ export async function generateMetadata(
 
 export default async function InvitationPage({ params }: { params: Promise<{ count: string }> }) {
   const resolvedParams = await params;
-  return <InvitationPageClient par
+  return <InvitationPageClient params={resolvedParams} />;
+}
