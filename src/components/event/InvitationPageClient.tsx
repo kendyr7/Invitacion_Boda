@@ -3,12 +3,13 @@
 
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import MusicPlayer from '@/components/event/MusicPlayer';
 import CountdownTimer from '@/components/event/CountdownTimer';
 import { Card, CardContent } from '@/components/ui/card';
 import SectionCard from '@/components/event/SectionCard';
 import EventDateDisplay from '@/components/event/EventDateDisplay';
-import { Input } from '@/components/ui/input';
+
 import { 
   Gift, 
   ListChecks,
@@ -40,14 +41,14 @@ const InstagramIcon = (props: React.SVGProps<SVGSVGElement>) => (
 );
 
 
-export default function InvitationPageClient({ params }: { params: { count: string } }) {
+export default function InvitationPageClient({ guestCount }: { guestCount: number }) {
   const [isOpened, setIsOpened] = useState(false);
-  const [guestName, setGuestName] = useState('');
+
   const [showBackToTop, setShowBackToTop] = useState(false);
   const { toast } = useToast();
+  const router = useRouter();
   const audioSrc = "/audio/until-i-found-you.mp3"; 
   const eventTargetDate = "2025-12-20T18:00:00-06:00";
-  const guestCount = parseInt(params.count, 10) || 1;
 
   useEffect(() => {
     if (!isOpened) return;
@@ -79,27 +80,8 @@ export default function InvitationPageClient({ params }: { params: { count: stri
   };
 
   const handleConfirm = () => {
-    if (!guestName.trim()) {
-      toast({
-        title: "Campo requerido",
-        description: "Por favor, ingresa tu nombre y apellido para confirmar.",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    const phoneNumber = "50557339437";
-    const message = `¡Hola! 👋 Confirmo mi asistencia a la boda. Mi nombre es ${guestName.trim()}. ¡Nos vemos! 🎉`;
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-    
-    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
-    
-    toast({
-        title: "¡Gracias por confirmar!",
-        description: "Serás redirigido a WhatsApp para enviar tu mensaje.",
-    });
-
-    setGuestName('');
+    // Redirect to guest login page for confirmation
+    router.push('/guest-login');
   };
 
   if (!isOpened) {
@@ -143,8 +125,9 @@ export default function InvitationPageClient({ params }: { params: { count: stri
           <Card className="bg-transparent border-none shadow-none w-full animate-in fade-in duration-1000 delay-200">
             <CardContent className="font-body text-lg sm:text-xl text-foreground/80 pt-6">
               <p>
-                Tu Divino Amor, fuente inagotable de <br />Gracia, guíe nuestra unión para que sea <br />agradable a tus ojos y guardado en <br />tu corazón.
+                ... No me ruegues que te deje y que me <br />aparte de ti; porque adondequiera que <br />tú fueres, iré yo, y dondequiera que <br />vivieres, viviré. Tu pueblo será<br /> mi pueblo, y tu Dios mi Dios.
               </p>
+              <p className='mt-2 text-foreground/50'>- Ruth 1:16</p>
             </CardContent>
           </Card>
 
@@ -300,14 +283,6 @@ export default function InvitationPageClient({ params }: { params: { count: stri
         >
           <div className="flex flex-col items-center pt-10 pb-24 px-4">
             <div className="flex flex-col items-center animate-in fade-in duration-1000 delay-[200ms] w-full max-w-xs">
-              <Input
-                type="text"
-                placeholder="Nombre y Apellido"
-                value={guestName}
-                onChange={(e) => setGuestName(e.target.value)}
-                className="mt-4 mb-3 bg-white/80 border-primary text-center w-full max-w-[280px] placeholder:text-foreground/50"
-                aria-label="Tu nombre y apellido"
-              />
               <Button
                 onClick={handleConfirm}
                 className="bg-primary hover:bg-primary/90 text-primary-foreground font-headline text-xl py-3 px-6 sm:py-4 sm:px-8 rounded-lg shadow-lg hover:shadow-xl transition-all transform hover:scale-105 w-full mb-2"

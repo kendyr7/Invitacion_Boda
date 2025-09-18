@@ -29,8 +29,11 @@ export default function HomePage() {
                 data-ai-hint="ring"
                 priority
             />
-            <h1 className="mt-4 font-headline text-3xl sm:text-4xl text-primary">Nuestra Boda</h1>
-            <p className="font-richford text-2xl sm:text-3xl text-primary/90 mt-2">Kevin Zuniga & Alison Ney</p>
+            <h1 className="mt-4 font-headline text-2xl sm:text-3xl text-primary">Nuestra Boda</h1>
+            <p className="font-richford text-4xl sm:text-3xl text-primary/90 mt-6">Kevin Zuniga</p>
+            <p className="font-richford text-1xl sm:text-3xl text-primary mt-2">&</p>
+            <p className="font-richford text-4xl sm:text-3xl text-primary/90 mt-2">Alison Ney</p>
+
             <p className="mt-6 text-lg text-foreground/80 max-w-md">
                 Por favor, utiliza el enlace de invitación personal que te fue enviado para ver los detalles completos.
             </p>

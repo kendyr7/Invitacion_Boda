@@ -21,6 +21,7 @@ export interface Attendee {
   name: string;
   confirmedAt: string; // Formatted date string
   archived: boolean;
+  tableNumber?: number; // Optional table assignment
 }
 
 // A helper function to extract a useful error message
@@ -72,6 +73,7 @@ export async function getAttendees(): Promise<Attendee[]> {
         name: data.name,
         confirmedAt: data.confirmedAt ? formatTimestamp(data.confirmedAt as Timestamp) : 'Fecha no disponible',
         archived: data.archived || false,
+        tableNumber: data.tableNumber || undefined,
       };
     });
     return attendeeList;
@@ -114,6 +116,60 @@ export async function toggleArchiveAttendee(formData: FormData) {
     return { success: true };
   } catch (error) {
     console.error("Error toggling archive state: ", error);
+    const message = getFirebaseErrorMessage(error);
+    return { success: false, message: message };
+  }
+}
+
+export async function updateAttendee(formData: FormData) {
+  if (!db) {
+    return { success: false, message: 'Error de configuración del servidor: la base de datos no está disponible.' };
+  }
+  
+  const attendeeId = formData.get('attendeeId') as string;
+  const name = formData.get('name') as string;
+  const tableNumber = formData.get('tableNumber') as string;
+
+  if (!attendeeId) {
+    return { success: false, message: 'ID de invitado inválido' };
+  }
+
+  if (!name || name.trim() === '') {
+    return { success: false, message: 'El nombre del invitado es requerido' };
+  }
+
+  const attendeeRef = doc(db, 'attendees', attendeeId);
+
+  try {
+    const attendeeSnap = await getDoc(attendeeRef);
+    if (!attendeeSnap.exists()) {
+      return { success: false, message: 'Invitado no encontrado' };
+    }
+
+    const updateData: any = {
+      name: name.trim(),
+    };
+
+    // Only update table number if provided
+    if (tableNumber && tableNumber.trim() !== '') {
+      const tableNum = parseInt(tableNumber.trim());
+      if (!isNaN(tableNum) && tableNum > 0) {
+        updateData.tableNumber = tableNum;
+      } else {
+        return { success: false, message: 'El número de mesa debe ser un número válido mayor a 0' };
+      }
+    } else {
+      // Remove table number if empty
+      updateData.tableNumber = null;
+    }
+
+    await updateDoc(attendeeRef, updateData);
+    
+    revalidatePath('/admin/attendees');
+    
+    return { success: true, message: 'Invitado actualizado correctamente' };
+  } catch (error) {
+    console.error("Error updating attendee: ", error);
     const message = getFirebaseErrorMessage(error);
     return { success: false, message: message };
   }
