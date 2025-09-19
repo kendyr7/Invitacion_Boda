@@ -291,7 +291,7 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
                 Confirmar Asistencia
               </Button>
               <p className="text-sm text-foreground/80 mt-2 text-center">
-                Fecha Límite de confirmación 30 de Julio
+                Fecha Límite de confirmación 28 de Noviembre 2025
               </p>
             </div>
           </div>

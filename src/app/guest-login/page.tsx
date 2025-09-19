@@ -100,7 +100,7 @@ export default function GuestLoginPage() {
             
             <div className="mt-6 text-center">
               <p className="text-sm text-foreground/60">
-                Fecha límite de confirmación: 30 de Julio
+                Fecha límite de confirmación: 28 de Noviembre 2025
               </p>
             </div>
           </CardContent>

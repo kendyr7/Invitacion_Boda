@@ -4,12 +4,15 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
 import { CheckCircle, XCircle, Calendar, MapPin, Clock, Users, Gift, Info } from 'lucide-react';
 import { addDoc, collection, query, where, getDocs, updateDoc, doc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import { sendConfirmationNotification } from '@/lib/emailjs';
 
 interface ConfirmationStatus {
   isConfirmed: boolean;
@@ -19,6 +22,7 @@ interface ConfirmationStatus {
 
 export default function ConfirmationPage() {
   const [guestName, setGuestName] = useState('');
+  const [specialMessage, setSpecialMessage] = useState('');
   const [confirmationStatus, setConfirmationStatus] = useState<ConfirmationStatus>({ isConfirmed: false });
   const [isLoading, setIsLoading] = useState(true);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -74,15 +78,38 @@ export default function ConfirmationPage() {
       if (!db) {
         throw new Error('Firebase not initialized');
       }
-      await addDoc(collection(db, 'attendees'), {
+      
+      // Add attendee to database
+      const docRef = await addDoc(collection(db, 'attendees'), {
         name: guestName,
         confirmedAt: new Date(),
-        archived: false
+        archived: false,
+        numberOfGuests: 1, // Default to 1, can be modified later in admin
+        specialMessage: specialMessage.trim() || '' // Add special message to database
       });
+      
+      // Send email notification
+      const notificationSent = await sendConfirmationNotification({
+        guestName: guestName,
+        numberOfGuests: 1,
+        confirmationDate: new Date().toLocaleDateString('es-NI', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        }),
+        specialMessage: specialMessage.trim() || 'Sin mensaje especial'
+      });
+      
+      if (!notificationSent) {
+        console.warn('Email notification failed to send, but confirmation was successful');
+      }
       
       setConfirmationStatus({
         isConfirmed: true,
-        confirmedAt: new Date().toLocaleDateString('es-NI')
+        confirmedAt: new Date().toLocaleDateString('es-NI'),
+        attendeeId: docRef.id
       });
       
       toast({
@@ -204,6 +231,25 @@ export default function ConfirmationPage() {
             </div>
             
             <div className="space-y-3">
+              {!confirmationStatus.isConfirmed && (
+                <div className="space-y-2">
+                  <Label htmlFor="special-message" className="text-sm font-medium text-foreground/80">
+                    Mensaje especial (opcional)
+                  </Label>
+                  <Textarea
+                    id="special-message"
+                    placeholder="Escribe unas palabras especiales para los novios..."
+                    value={specialMessage}
+                    onChange={(e) => setSpecialMessage(e.target.value)}
+                    className="min-h-[80px] resize-none bg-background/50 border-primary/20 focus:border-primary/50"
+                    maxLength={200}
+                  />
+                  <p className="text-xs text-foreground/60 text-right">
+                    {specialMessage.length}/200 caracteres
+                  </p>
+                </div>
+              )}
+              
               {!confirmationStatus.isConfirmed ? (
                 <Button 
                   onClick={handleConfirmAttendance}
@@ -245,7 +291,7 @@ export default function ConfirmationPage() {
                 <Calendar className="h-5 w-5 text-primary" />
                 <div>
                   <p className="font-semibold">Fecha</p>
-                  <p className="text-sm text-foreground/70">Sábado, 2 de Agosto 2025</p>
+                  <p className="text-sm text-foreground/70">Viernes, 20 de Diciembre 2025</p>
                 </div>
               </div>
               
@@ -289,7 +335,7 @@ export default function ConfirmationPage() {
         
         <div className="text-center">
           <p className="text-sm text-foreground/60">
-            Fecha límite de confirmación: 30 de Julio
+            Fecha límite de confirmación: 28 de Noviembre 2025
           </p>
         </div>
       </div>
