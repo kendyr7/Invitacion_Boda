@@ -44,10 +44,11 @@ type Props = {
   params: { count: string }
 }
  
-export async function generateMetadata(
+// Remove 'use client' directive and move generateMetadata to a separate server component
+export const generateMetadata = async (
   { params }: Props,
   parent: ResolvingMetadata
-): Promise<Metadata> {
+): Promise<Metadata> => {
   const count = parseInt(params.count, 10) || 1
  
   return {
@@ -62,7 +63,7 @@ export default function InvitationPage({ params }: { params: { count: string } }
   const [guestName, setGuestName] = useState('');
   const [showBackToTop, setShowBackToTop] = useState(false);
   const { toast } = useToast();
-  const audioSrc = "/audio/until-i-found-you.mp3"; 
+  const audioSrc = "/audio/Light Sleeping At Last.mp3"; 
   const eventTargetDate = "2025-08-16T18:00:00-06:00";
   const guestCount = parseInt(params.count, 10) || 1;
 

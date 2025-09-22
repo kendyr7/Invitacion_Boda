@@ -47,7 +47,7 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
   const [showBackToTop, setShowBackToTop] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
-  const audioSrc = "/audio/until-i-found-you.mp3"; 
+  const audioSrc = "/audio/Light Sleeping At Last.mp3"; 
   const eventTargetDate = "2025-12-20T18:00:00-06:00";
 
   useEffect(() => {
