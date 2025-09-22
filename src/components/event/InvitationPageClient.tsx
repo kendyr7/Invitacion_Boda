@@ -80,6 +80,8 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
   };
 
   const handleConfirm = () => {
+    // Store guest count in session storage for the guest login page
+    sessionStorage.setItem('guestCount', guestCount.toString());
     // Redirect to guest login page for confirmation
     router.push('/guest-login');
   };

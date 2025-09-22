@@ -18,10 +18,12 @@ import {
 
 export interface Attendee {
   id: string; // Firestore document ID
-  name: string;
+  names: string[]; // Array of names for multiple guests
   confirmedAt: string; // Formatted date string
   archived: boolean;
   tableNumber?: number; // Optional table assignment
+  specialMessage?: string; // Special message from guest
+  numberOfGuests: number; // Number of guests in this invitation
 }
 
 // A helper function to extract a useful error message
@@ -70,10 +72,12 @@ export async function getAttendees(): Promise<Attendee[]> {
       const data = doc.data();
       return {
         id: doc.id,
-        name: data.name,
+        names: data.names || [data.name] || [], // Handle both old and new format
         confirmedAt: data.confirmedAt ? formatTimestamp(data.confirmedAt as Timestamp) : 'Fecha no disponible',
         archived: data.archived || false,
         tableNumber: data.tableNumber || undefined,
+        specialMessage: data.specialMessage || undefined,
+        numberOfGuests: data.numberOfGuests || data.names?.length || 1, // Use numberOfGuests or names length
       };
     });
     return attendeeList;
@@ -127,15 +131,22 @@ export async function updateAttendee(formData: FormData) {
   }
   
   const attendeeId = formData.get('attendeeId') as string;
-  const name = formData.get('name') as string;
+  const namesJson = formData.get('names') as string;
   const tableNumber = formData.get('tableNumber') as string;
 
   if (!attendeeId) {
     return { success: false, message: 'ID de invitado inválido' };
   }
 
-  if (!name || name.trim() === '') {
-    return { success: false, message: 'El nombre del invitado es requerido' };
+  let names: string[] = [];
+  try {
+    names = JSON.parse(namesJson);
+  } catch {
+    return { success: false, message: 'Formato de nombres inválido' };
+  }
+
+  if (!names || names.length === 0 || names.every(name => !name.trim())) {
+    return { success: false, message: 'Al menos un nombre de invitado es requerido' };
   }
 
   const attendeeRef = doc(db, 'attendees', attendeeId);
@@ -147,7 +158,8 @@ export async function updateAttendee(formData: FormData) {
     }
 
     const updateData: any = {
-      name: name.trim(),
+      names: names.map(name => name.trim()).filter(name => name),
+      numberOfGuests: names.filter(name => name.trim()).length,
     };
 
     // Only update table number if provided

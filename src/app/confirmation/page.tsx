@@ -21,7 +21,8 @@ interface ConfirmationStatus {
 }
 
 export default function ConfirmationPage() {
-  const [guestName, setGuestName] = useState('');
+  const [guestNames, setGuestNames] = useState<string[]>([]);
+  const [guestCount, setGuestCount] = useState(1);
   const [specialMessage, setSpecialMessage] = useState('');
   const [confirmationStatus, setConfirmationStatus] = useState<ConfirmationStatus>({ isConfirmed: false });
   const [isLoading, setIsLoading] = useState(true);
@@ -30,23 +31,30 @@ export default function ConfirmationPage() {
   const { toast } = useToast();
 
   useEffect(() => {
-    const storedGuestName = sessionStorage.getItem('guestName');
-    if (!storedGuestName) {
+    const storedGuestNames = sessionStorage.getItem('guestNames');
+    const storedGuestCount = sessionStorage.getItem('guestCount');
+    
+    if (!storedGuestNames || !storedGuestCount) {
       router.push('/guest-login');
       return;
     }
     
-    setGuestName(storedGuestName);
-    checkConfirmationStatus(storedGuestName);
+    const names = JSON.parse(storedGuestNames);
+    const count = parseInt(storedGuestCount, 10);
+    
+    setGuestNames(names);
+    setGuestCount(count);
+    checkConfirmationStatus(names);
   }, [router]);
 
-  const checkConfirmationStatus = async (name: string) => {
+  const checkConfirmationStatus = async (names: string[]) => {
     try {
       if (!db) {
         throw new Error('Firebase not initialized');
       }
       const attendeesRef = collection(db, 'attendees');
-      const q = query(attendeesRef, where('name', '==', name));
+      // Check if any of the names are already confirmed
+      const q = query(attendeesRef, where('names', 'array-contains-any', names));
       const querySnapshot = await getDocs(q);
       
       if (!querySnapshot.empty) {
@@ -79,18 +87,18 @@ export default function ConfirmationPage() {
         throw new Error('Firebase not initialized');
       }
       
-      // Add attendee to database
+      // Add attendee to database with multiple names
       const docRef = await addDoc(collection(db, 'attendees'), {
-        name: guestName,
+        names: guestNames, // Store array of names
         confirmedAt: new Date(),
         archived: false,
-        numberOfGuests: 1, // Default to 1, can be modified later in admin
+        numberOfGuests: guestCount, // Use actual guest count
         specialMessage: specialMessage.trim() || '' // Add special message to database
       });
       
       // Send email notification
       const notificationSent = await sendConfirmationNotification({
-        guestName: guestName,
+        guestName: guestNames.join(', '), // Join names for email
         numberOfGuests: 1,
         confirmationDate: new Date().toLocaleDateString('es-NI', {
           year: 'numeric',
@@ -199,9 +207,11 @@ export default function ConfirmationPage() {
                 className="opacity-80"
               />
             </div>
-            <CardTitle className="text-2xl font-headline text-primary">¡Hola, {guestName}!</CardTitle>
+            <CardTitle className="text-2xl font-headline text-primary">
+              ¡Hola, {guestNames.length > 1 ? guestNames.join(' y ') : guestNames[0]}!
+            </CardTitle>
             <CardDescription className="text-foreground/70">
-              Estado de tu confirmación para la boda
+              Estado de {guestCount > 1 ? 'su' : 'tu'} confirmación para la boda
             </CardDescription>
           </CardHeader>
           <CardContent className="text-center">

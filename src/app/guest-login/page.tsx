@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,18 +10,52 @@ import { useToast } from "@/hooks/use-toast";
 import Image from 'next/image';
 
 export default function GuestLoginPage() {
-  const [guestName, setGuestName] = useState('');
+  const [guestNames, setGuestNames] = useState<string[]>(['']);
+  const [guestCount, setGuestCount] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
 
+  useEffect(() => {
+    // Get the guest count from the referrer URL or session storage
+    const getReferrerGuestCount = () => {
+      // First try to get from session storage (if set from invitation page)
+      const storedCount = sessionStorage.getItem('guestCount');
+      if (storedCount) {
+        return parseInt(storedCount, 10);
+      }
+
+      // Try to extract from document.referrer
+      if (document.referrer) {
+        const referrerUrl = new URL(document.referrer);
+        const pathParts = referrerUrl.pathname.split('/');
+        const invitationIndex = pathParts.indexOf('invitation');
+        
+        if (invitationIndex !== -1 && pathParts[invitationIndex + 1]) {
+          const count = parseInt(pathParts[invitationIndex + 1], 10);
+          if (!isNaN(count) && count > 0) {
+            return count;
+          }
+        }
+      }
+
+      return 1; // Default to 1 guest
+    };
+
+    const count = getReferrerGuestCount();
+    setGuestCount(count);
+    setGuestNames(new Array(count).fill(''));
+  }, []);
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!guestName.trim()) {
+    // Validate all guest names
+    const validNames = guestNames.filter(name => name.trim());
+    if (validNames.length !== guestCount) {
       toast({
-        title: "Campo requerido",
-        description: "Por favor, ingresa tu nombre completo.",
+        title: "Campos requeridos",
+        description: `Por favor, ingresa ${guestCount === 1 ? 'tu nombre completo' : `los ${guestCount} nombres completos`}.`,
         variant: "destructive",
       });
       return;
@@ -30,8 +64,9 @@ export default function GuestLoginPage() {
     setIsLoading(true);
     
     try {
-      // Store guest name in session storage for the confirmation page
-      sessionStorage.setItem('guestName', guestName.trim());
+      // Store guest names in session storage for the confirmation page
+      sessionStorage.setItem('guestNames', JSON.stringify(validNames));
+      sessionStorage.setItem('guestCount', guestCount.toString());
       
       // Redirect to confirmation page
       router.push('/confirmation');
@@ -44,6 +79,12 @@ export default function GuestLoginPage() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleNameChange = (index: number, value: string) => {
+    const newNames = [...guestNames];
+    newNames[index] = value;
+    setGuestNames(newNames);
   };
 
   return (
@@ -71,24 +112,31 @@ export default function GuestLoginPage() {
             </div>
             <CardTitle className="text-2xl font-headline text-primary">Confirmación de Asistencia</CardTitle>
             <CardDescription className="text-foreground/70">
-              Ingresa tu nombre para confirmar tu asistencia a la boda
+              {guestCount === 1 
+                ? "Ingresa tu nombre para confirmar tu asistencia a la boda"
+                : `Ingresa los nombres de los ${guestCount} invitados para confirmar su asistencia`
+              }
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleLogin} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="guestName" className="text-foreground/80">Nombre Completo</Label>
-                <Input
-                  id="guestName"
-                  type="text"
-                  placeholder="Tu nombre y apellido"
-                  required
-                  value={guestName}
-                  onChange={(e) => setGuestName(e.target.value)}
-                  className="bg-white/80 border-primary text-center"
-                  disabled={isLoading}
-                />
-              </div>
+              {guestNames.map((name, index) => (
+                <div key={index} className="space-y-2">
+                  <Label htmlFor={`guestName${index}`} className="text-foreground/80">
+                    {guestCount === 1 ? 'Nombre Completo' : `Nombre del Invitado ${index + 1}`}
+                  </Label>
+                  <Input
+                    id={`guestName${index}`}
+                    type="text"
+                    placeholder={guestCount === 1 ? "Tu nombre y apellido" : `Nombre y apellido del invitado ${index + 1}`}
+                    required
+                    value={name}
+                    onChange={(e) => handleNameChange(index, e.target.value)}
+                    className="bg-white/80 border-primary text-center"
+                    disabled={isLoading}
+                  />
+                </div>
+              ))}
               <Button 
                 type="submit" 
                 className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-headline text-lg py-3 rounded-lg shadow-lg hover:shadow-xl transition-all transform hover:scale-105"

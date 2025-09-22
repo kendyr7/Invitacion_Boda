@@ -24,7 +24,7 @@ interface EditAttendeeModalProps {
 }
 
 export function EditAttendeeModal({ attendee, isOpen, onClose, onSuccess }: EditAttendeeModalProps) {
-  const [name, setName] = useState('');
+  const [names, setNames] = useState<string[]>([]);
   const [tableNumber, setTableNumber] = useState('');
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
@@ -32,10 +32,16 @@ export function EditAttendeeModal({ attendee, isOpen, onClose, onSuccess }: Edit
   // Update form when attendee changes
   React.useEffect(() => {
     if (attendee) {
-      setName(attendee.name);
+      setNames(attendee.names || []);
       setTableNumber(attendee.tableNumber?.toString() || '');
     }
   }, [attendee]);
+
+  const handleNameChange = (index: number, value: string) => {
+    const newNames = [...names];
+    newNames[index] = value;
+    setNames(newNames);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,7 +51,7 @@ export function EditAttendeeModal({ attendee, isOpen, onClose, onSuccess }: Edit
     startTransition(async () => {
       const formData = new FormData();
       formData.append('attendeeId', attendee.id);
-      formData.append('name', name);
+      formData.append('names', JSON.stringify(names.filter(name => name.trim())));
       formData.append('tableNumber', tableNumber);
 
       const result = await updateAttendee(formData);
@@ -84,17 +90,20 @@ export function EditAttendeeModal({ attendee, isOpen, onClose, onSuccess }: Edit
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name">Nombre</Label>
-            <Input
-              id="name"
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Nombre del invitado"
-              required
-              disabled={isPending}
-              className="text-base" // Better for mobile
-            />
+            <Label>Nombres de Invitados</Label>
+            {names.map((name, index) => (
+              <div key={index} className="space-y-1">
+                <Input
+                  type="text"
+                  value={name}
+                  onChange={(e) => handleNameChange(index, e.target.value)}
+                  placeholder={`Nombre del invitado ${index + 1}`}
+                  required
+                  disabled={isPending}
+                  className="text-base"
+                />
+              </div>
+            ))}
           </div>
           <div className="space-y-2">
             <Label htmlFor="tableNumber">Número de Mesa</Label>
@@ -124,7 +133,7 @@ export function EditAttendeeModal({ attendee, isOpen, onClose, onSuccess }: Edit
             </Button>
             <Button
               type="submit"
-              disabled={isPending || !name.trim()}
+              disabled={isPending || names.every(name => !name.trim())}
               className="w-full sm:w-auto"
             >
               {isPending ? 'Guardando...' : 'Guardar Cambios'}

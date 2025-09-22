@@ -13,7 +13,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   useEffect(() => {
     const timer = setTimeout(() => {
         if (!isAuthenticated) {
-            router.push('/login');
+            router.push('/admin/login');
         }
     }, 100); 
 

@@ -39,7 +39,7 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
   const logout = () => {
     setIsAuthenticated(false);
     sessionStorage.removeItem('isAuthenticated');
-    router.push('/login');
+    router.push('/admin/login');
   };
 
   return (
