@@ -89,7 +89,7 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
   if (!isOpened) {
     return (
       <main 
-        className="flex min-h-screen flex-col items-center justify-center bg-background p-4 cursor-pointer" 
+        className="flex min-h-screen flex-col items-center justify-center p-4 cursor-pointer" 
         onClick={handleOpenEnvelope}
       >
         <div className="text-center animate-in fade-in duration-1000">
@@ -109,52 +109,54 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
   }
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen bg-background text-foreground relative overflow-auto sm:overflow-hidden">
-      <Image 
-        src="/flowers_deco/elegant-background.jpeg"
-        fill
-        alt="Elegant event background" 
-        className="absolute inset-0 z-[-1] opacity-20 filter blur-sm object-cover"
-        priority
-        data-ai-hint="elegant floral"
-      />
-      
-      <div 
-        className="relative z-10 flex flex-col items-center text-center max-w-2xl w-full bg-background/80 dark:bg-neutral-900/80 backdrop-blur-md rounded-xl shadow-2xl my-8 animate-in fade-in slide-in-from-bottom-10 duration-700 bg-[url('/paper-texture.jpg')] bg-cover bg-center overflow-hidden"
-      >
-        <div className="mt-12 relative z-10 flex flex-col items-center text-center space-y-8 sm:space-y-10 p-4 sm:p-8">
-        
-          <Card className="bg-transparent border-none shadow-none w-full animate-in fade-in duration-1000 delay-200">
-            <CardContent className="font-body text-lg sm:text-xl text-foreground/80 pt-6">
-              <p>
-                ... No me ruegues que te deje y que me <br />aparte de ti; porque adondequiera que <br />tú fueres, iré yo, y dondequiera que <br />vivieres, viviré. Tu pueblo será<br /> mi pueblo, y tu Dios mi Dios.
-              </p>
-              <p className='mt-2 text-foreground/50'>- Ruth 1:16</p>
-            </CardContent>
-          </Card>
+    <main className="flex flex-col items-center justify-center min-h-screen text-foreground relative overflow-auto sm:overflow-hidden">
 
-          <div className="flex flex-col items-center mt-8 mb-6 animate-in fade-in duration-1000 delay-300">
-            <Image src="/ring.png" alt="Ring" width={300} height={300} data-ai-hint="ring" className="drop-shadow-lg"/>
-            <p className="font-headline text-2xl sm:text-3xl text-primary mt-2 tracking-widest">Nuestra Boda</p>
-          </div>
-
-          <div className="animate-in fade-in duration-1000 delay-400 mb-4 sm:mb-6 w-full text-center">
+      <div className="mt-16 animate-in fade-in duration-1000 delay-400 mb-4 sm:mb-6 w-screen relative -mx-4 sm:-mx-8 md:-mx-16 lg:-mx-24 xl:-mx-32">
+        <div className="w-[110%] -ml-[5%] relative">
+          <Image 
+            src="/cover.png" 
+            alt="Wedding Cover" 
+            width={800} 
+            height={600} 
+            className="w-full h-auto object-cover" 
+            data-ai-hint="wedding cover"
+          />
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center">
+            <p className="font-headline text-1xl sm:text-2xl text-primary mb-4 tracking-widest drop-shadow-lg">Nuestra Boda</p>
             <h1 className="text-4xl sm:text-5xl text-primary flex flex-col items-center justify-center">
-              <span className="font-richford">Kevin Zuniga</span>
-              <span className="font-eve-adam text-2xl sm:text-2xl my-2">&</span>
-              <span className="font-richford">Alison Ney</span>
+              <span className="font-richford drop-shadow-lg">Kevin Zuniga</span>
+              <span className="font-eve-adam text-2xl sm:text-2xl my-2 drop-shadow-lg">&</span>
+              <span className="font-richford drop-shadow-lg">Alison Ney</span>
             </h1>
           </div>
-          
-          <MusicPlayer audioSrc={audioSrc} autoPlay={isOpened} className="animate-in fade-in duration-1000 delay-500" />
+        </div>
+      </div>
+      
+      <div 
+        className="relative z-10 flex flex-col items-center text-center max-w-2xl w-full backdrop-blur-md rounded-xl shadow-2xl my-8 animate-in fade-in slide-in-from-bottom-10 duration-700 overflow-hidden"
+      >
+        <div className="w-full my-8 py-8 animate-in fade-in duration-1000 delay-800 flex flex-col items-center justify-center gap-6 backdrop-blur-md relative">
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[rgba(179,193,176,0.15)] to-transparent"></div>
+          <div className="w-full max-w-md mx-auto relative z-10">
+            <CountdownTimer targetDate={eventTargetDate} />
+          </div>
+          <AddToCalendarButton 
+            event={{
+                title: "Nuestra Boda - Alison Ney & Kevin Zuniga",
+                description: "¡Acompáñanos a celebrar nuestra unión! Te esperamos para compartir este día tan especial.",
+                location: "Restaurante El Horizonte, Carretera Chinandega",
+                receptionLocation: "https://maps.app.goo.gl/SzXAqsLcjhAFVoXa9?g_st=iw",
+                ceremonyLocation: "https://maps.app.goo.gl/EnDGVqjE2e7bHwrK9?g_st=iw",
+                startTime: eventTargetDate,
+                endTime: "2025-12-21T02:00:00-06:00",
+                timeZone: "America/Managua",
+            }}
+          />
+        </div>
+        
+        <div className="mt-6 relative z-10 flex flex-col items-center text-center space-y-8 sm:space-y-10 p-4 sm:p-4">
 
-          <Card className="bg-transparent border-none shadow-none w-full animate-in fade-in duration-1000 delay-600">
-            <CardContent className="font-body text-lg sm:text-xl text-foreground/80 pt-6">
-              <p>
-               Con la bendición de Dios y nuestros padres<br />Unimos nuestras vidas en Matrimonio y seria un honor<br />contar con su presencia en este dia tan especial.
-              </p>
-            </CardContent>
-          </Card>
+          <MusicPlayer audioSrc={audioSrc} autoPlay={isOpened} className="animate-in fade-in duration-1000 delay-500" />
 
           <EventDateDisplay 
             monthName="Diciembre"
@@ -165,33 +167,36 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
             className="animate-in fade-in duration-1000 delay-700 text-primary"
           />
         </div>
-
-        <div className="w-full bg-[#f4f0ed] my-8 py-8 animate-in fade-in duration-1000 delay-800 flex flex-col items-center justify-center gap-6">
-          <div className="w-full max-w-md mx-auto">
-            <CountdownTimer targetDate={eventTargetDate} />
-          </div>
-          <AddToCalendarButton 
-             event={{
-                title: "Nuestra Boda - Alison Ney & Kevin Zuniga",
-                description: "¡Acompáñanos a celebrar nuestra unión! Te esperamos para compartir este día tan especial.",
-                location: "Restaurante El Horizonte, Carretera Chinandega",
-                receptionLocation: "https://maps.app.goo.gl/SzXAqsLcjhAFVoXa9?g_st=iw",
-                ceremonyLocation: "https://maps.app.goo.gl/EnDGVqjE2e7bHwrK9?g_st=iw",
-                startTime: eventTargetDate,
-                endTime: "2025-12-21T02:00:00-06:00",
-                timeZone: "America/Managua",
-             }}
+          
+        <div className="mt-12 relative z-10 flex flex-col items-center text-center space-y-8 sm:space-y-10 p-4 sm:p-8">
+          <Image 
+            src="/separador.png" 
+            alt="Separador decorativo" 
+            width={300} 
+            height={50} 
+            className="mx-auto animate-in fade-in duration-1000 delay-100 opacity-50 my-2" 
+            data-ai-hint="decorative separator"
           />
+
+          <Card className="bg-transparent border-none shadow-none w-full animate-in fade-in duration-1000 delay-200">
+            <CardContent className="font-body text-lg sm:text-xl text-foreground/80 pt-6">
+              <p>
+                ... No me ruegues que te deje y que me aparte de ti; porque adondequiera que tú fueres, iré yo, y dondequiera que vivieres, viviré. Tu pueblo será mi pueblo, y tu Dios mi Dios.
+              </p>
+              <p className='mt-2 text-foreground/50'>- Ruth 1:16</p>
+            </CardContent>
+          </Card>
+
+          <Image 
+            src="/separador.png" 
+            alt="Separador decorativo rotado" 
+            width={300} 
+            height={50} 
+            className="mx-auto animate-in fade-in duration-1000 delay-250 opacity-50 rotate-180 my-2" 
+            data-ai-hint="decorative separator rotated"
+          />
+          
         </div>
-
-        <Image 
-            src="/decor_image3.png"
-            alt="Decoration Image"
-            width={250}
-            height={100}
-            className="mx-auto my-4"
-            data-ai-hint="pink flower"
-          />
         
         <div className="flex flex-col items-center text-center space-y-8 sm:space-y-10 p-4 sm:p-8 pt-0">
           
@@ -300,7 +305,7 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
         </div>
 
         {/* Footer */}
-        <footer className="w-full text-center py-4 bg-background/80 dark:bg-neutral-900/80 text-foreground/60 text-xs bg-[url('/paper-texture.jpg')] bg-cover bg-center backdrop-blur-md">
+        <footer className="w-full text-center py-4 text-foreground/60 text-xs backdrop-blur-md">
           <a 
             href="https://www.instagram.com/invitaciones_digitales_505?utm_source=ig_web_button_share_sheet&igsh=cWl4ZGN1ZjR3ODlw" 
             target="_blank" 
