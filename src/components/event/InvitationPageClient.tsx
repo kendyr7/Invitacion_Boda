@@ -109,7 +109,7 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
   }
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen bg-background text-foreground relative overflow-auto sm:overflow-hidden">
+    <main className="flex flex-col items-center justify-center min-h-screen text-foreground relative overflow-x-hidden">
 
       <div className="mt-16 animate-in fade-in duration-1000 delay-400 mb-4 sm:mb-6 w-screen relative -mx-4 sm:-mx-8 md:-mx-16 lg:-mx-24 xl:-mx-32">
         <div className="w-[110%] -ml-5%] relative">
@@ -122,25 +122,24 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
             data-ai-hint="wedding cover"
           />
           <div className="absolute inset-0 z-10 flex flex-col items-center justify-center">
-            <h1 className="text-5xl sm:text-5xl text-primary flex flex-col items-center justify-center">
+            <h1 className="text-4xl sm:text-4xl text-primary flex flex-col items-center justify-center">
               <span className="font-richford drop-shadow-lg">Kevin Zuniga</span>
               <span className="font-eve-adam text-2xl sm:text-2xl my-2 drop-shadow-lg">&</span>
               <span className="font-richford drop-shadow-lg">Alison Ney</span>
             </h1>
 
-            <div className="mt-8 flex flex-col items-center justify-center w-[40%]">
-              <EventDateDisplay 
-                monthName="Diciembre"
-                dayName="Viernes"
-                dayNumber="20"
-                year="2025"
-                time="6:00 PM"
-                className="mt-12 animate-in fade-in duration-1000 delay-700 text-primary"
-              />
-            </div>
           </div>
         </div>
       </div>
+
+      <EventDateDisplay 
+        monthName="Diciembre"
+        dayName="Viernes"
+        dayNumber="20"
+        year="2025"
+        time="6:00 PM"
+        className="mt-12 animate-in fade-in duration-1000 delay-700 text-primary"
+      />
       
       <div 
         className="relative z-10 flex flex-col items-center text-center max-w-2xl w-full rounded-xl shadow-2xl my-8 animate-in fade-in slide-in-from-bottom-10 duration-700 overflow-hidden"
@@ -170,7 +169,7 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
         </div>
         
         {/* Separador superior - 100% ancho */}
-        <div className="w-screen relative -mx-4 sm:-mx-8 md:-mx-16 lg:-mx-24 xl:-mx-32 z-20">
+        <div className="w-full relative overflow-hidden z-20">
           <Image 
             src="/separador.png" 
             alt="Separador decorativo" 
@@ -193,7 +192,7 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
         </div>
 
         {/* Separador inferior - 100% ancho */}
-        <div className="w-screen relative -mx-4 sm:-mx-8 md:-mx-16 lg:-mx-24 xl:-mx-32 z-20">
+        <div className="w-full relative overflow-hidden z-20">
           <Image 
             src="/separador.png" 
             alt="Separador decorativo rotado" 
@@ -239,7 +238,7 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
           <div className="w-full max-w-2xl mx-auto px-6 py-8">
             {/* Encabezado principal */}
             <div className="text-center mb-12">
-              <h2 className="font-richford text-3xl text-primary italic font-bold">
+              <h2 className="font-richford text-2xl text-primary italic font-bold">
                 Información Importante
               </h2>
             </div>
