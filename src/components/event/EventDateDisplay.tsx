@@ -39,7 +39,7 @@ const EventDateDisplay: FC<EventDateDisplayProps> = ({
 
         {/* CENTER - DATE NUMBER */}
         <div className="px-4">
-          <p className="text-6xl sm:text-7xl font-headline text-primary-900">
+          <p className="text-6xl sm:text-7xl font-headline golden-frost-number">
             {dayNumber}
           </p>
         </div>

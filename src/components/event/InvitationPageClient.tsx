@@ -1,4 +1,3 @@
-
 'use client';
 
 import Image from 'next/image';
@@ -122,12 +121,16 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
             data-ai-hint="wedding cover"
           />
           <div className="absolute inset-0 z-10 flex flex-col items-center justify-center">
-            <h1 className="text-4xl sm:text-4xl text-primary flex flex-col items-center justify-center">
-              <span className="font-richford drop-shadow-lg">Kevin Zuniga</span>
+            {/* <h1 className="text-5xl sm:text-5xl text-primary flex flex-col items-center justify-center">
+              <span className="font-richford drop-shadow-lg">Kevin</span>
               <span className="font-eve-adam text-2xl sm:text-2xl my-2 drop-shadow-lg">&</span>
-              <span className="font-richford drop-shadow-lg">Alison Ney</span>
-            </h1>
-
+              <span className="font-richford drop-shadow-lg">Alison</span>
+            </h1> */}
+            <img 
+              src="/Kevin y Alison.svg" 
+              alt="Kevin y Alison" 
+              className="w-auto h-55 sm:h-40 drop-shadow-lg"
+            />
           </div>
         </div>
       </div>
@@ -209,7 +212,7 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
             <SectionCard 
               title="Ceramonia & Recepción"
               locationButton={{ text: "Ver Ubicación", url: "https://maps.app.goo.gl/U5ZiL6hu6SSVn8m8A" }}
-              titleClassName="font-richford text-primary"
+              titleClassName="font-richford text-4xl text-primary"
             >
               <div className="flex flex-col items-center space-y-2 mb-3">
                 <Image src="/champagne.png" alt="champagne Icon" width={40} height={40} className="shrink-0" data-ai-hint="champagne"/>
@@ -224,7 +227,7 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
           <div className="w-full animate-in fade-in duration-1000 delay-[1300ms]">
             <SectionCard 
               title="Código de Vestimenta"
-              titleClassName="font-richford text-primary"
+              titleClassName="font-richford text-4xl text-primary"
             >
               <div>
                 <p className='text-sm sm:text-base font-bold'>Formal</p>
@@ -238,7 +241,7 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
           <div className="w-full max-w-2xl mx-auto px-6 py-8">
             {/* Encabezado principal */}
             <div className="text-center mb-12">
-              <h2 className="font-richford text-2xl text-primary italic font-bold">
+              <h2 className="font-richford text-4xl text-primary font-bold">
                 Información Importante
               </h2>
             </div>
@@ -250,11 +253,11 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
                 <span className="text-primary font-bold text-2xl">1</span>
                 <div className="w-px h-20 bg-primary/30 mt-1"></div>
                 <div className="flex-1 text-left">
-                  <h3 className="text-xl font-bold text-gray-800 mb-2">Pase Personal</h3>
-                  <p className="text-lg font-semibold text-gray-700 mb-1">
+                  <h3 className="text-md font-bold text-gray-500 tracking-[0.3em]">PASE PERSONAL</h3>
+                  <p className="text-base text-gray-400">
                     Invitación válida para {guestCount} persona{guestCount > 1 ? 's' : ''}
                   </p>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-gray-600 italic">
                     Este pase es personal e intransferible.
                   </p>
                 </div>
@@ -265,8 +268,8 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
                 <span className="text-primary font-bold text-2xl">2</span>
                 <div className="w-px h-16 bg-primary/30 mt-1"></div>
                 <div className="flex-1 text-left">
-                  <h3 className="text-xl font-bold text-gray-800 mb-2">Regalos</h3>
-                  <p className="text-base text-gray-700">
+                  <h3 className="text-md font-bold text-gray-500 tracking-[0.3em]">REGALOS</h3>
+                  <p className="text-base text-gray-400">
                     Agradecemos sus muestras de cariño en sobre.
                   </p>
                 </div>
@@ -277,8 +280,8 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
                 <span className="text-primary font-bold text-2xl">3</span>
                 <div className="w-px h-16 bg-primary/30 mt-1"></div>
                 <div className="flex-1 text-left">
-                  <h3 className="text-xl font-bold text-gray-800 mb-2">Nota Importante</h3>
-                  <p className="text-base text-gray-700">
+                  <h3 className="text-md font-bold text-gray-500 tracking-[0.3em]">NOTA IMPORTANTE</h3>
+                  <p className="text-base text-gray-400">
                     Le pedimos amablemente su presencia sin niños.
                   </p>
                 </div>

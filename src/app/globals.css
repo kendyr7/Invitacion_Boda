@@ -9,6 +9,13 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'EarflineRegular';
+  src: url('/fonts/EarflineRegular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 @layer base {
   :root {
     --background: 0 0% 96.1%; /* Light Gray #F5F5F5 - Unchanged */
@@ -111,4 +118,58 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+}
+
+/* SVG Animation Styles for Kevin y Alison */
+img[src="/Kevin y Alison.svg"] {
+  animation: svgFadeIn 6s ease-in-out forwards;
+}
+
+/* Alternative approach - if we need to make the SVG inline */
+.kevin-alison-svg path {
+  fill: transparent;
+  stroke: white;
+  stroke-width: 2;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: textStroke 4s ease-in-out forwards, textFill 2s ease-in-out 3s forwards;
+}
+
+@keyframes textStroke {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes textFill {
+  to {
+    fill: white;
+    stroke: white;
+  }
+}
+
+@keyframes svgFadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Golden Frost Effect for Day Number */
+.golden-frost-number {
+  color: #d4b694;
+  font-weight: bold;
+}
+
+/* EarflineRegular Font for Countdown Timer */
+.earfline-font {
+  font-family: 'EarflineRegular', sans-serif;
 }
