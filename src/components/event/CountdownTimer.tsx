@@ -56,8 +56,8 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ targetDate }) => {
     return (
       <div className="grid grid-cols-4 gap-4 text-center animate-in fade-in duration-1000 delay-500">
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="p-4 rounded-lg">
-            <div className="text-3xl sm:text-4xl font-bold text-primary animate-pulse">--</div>
+          <div key={i} className="p-4">
+            <div className="text-3xl sm:text-4xl  font-bold text-primary animate-pulse">--</div>
             <div className="text-xs sm:text-sm text-primary uppercase tracking-wider">Loading...</div>
           </div>
         ))}
@@ -68,7 +68,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ targetDate }) => {
   const timerComponents = [
     { label: 'Dias', value: timeLeft.days },
     { label: 'Horas', value: timeLeft.hours },
-    { label: 'Minutos', value: timeLeft.minutes },
+    { label: 'Min', value: timeLeft.minutes },
     { label: 'Seg', value: timeLeft.seconds },
   ];
 
@@ -76,8 +76,8 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ targetDate }) => {
     <div className="grid grid-cols-4 gap-4 text-center animate-in fade-in duration-1000 delay-500 w-full max-w-md">
       {timerComponents.map((component, index) => (
         component.value !== undefined && (
-          <div key={index} className="p-3 sm:p-4 rounded-lg transform transition-all hover:scale-120">
-            <div className="text-4xl sm:text-6xl font-headline font-bold text-primary mb-2">
+          <div key={index} className="p-3 sm:p-4 transform transition-all hover:scale-120">
+            <div className="text-4xl sm:text-6xl font-headline font-bold text-primary mb-2 font-richford">
               {String(component.value).padStart(2, '0')}&nbsp;
             </div>
             <div className="text-sm sm:text-base text-primary uppercase tracking-wider font-body">

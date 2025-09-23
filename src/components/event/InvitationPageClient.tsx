@@ -122,12 +122,19 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
             data-ai-hint="wedding cover"
           />
           <div className="absolute inset-0 z-10 flex flex-col items-center justify-center">
-            <p className="font-headline text-1xl sm:text-2xl text-primary mb-4 tracking-widest drop-shadow-lg">Nuestra Boda</p>
             <h1 className="text-4xl sm:text-5xl text-primary flex flex-col items-center justify-center">
               <span className="font-richford drop-shadow-lg">Kevin Zuniga</span>
               <span className="font-eve-adam text-2xl sm:text-2xl my-2 drop-shadow-lg">&</span>
               <span className="font-richford drop-shadow-lg">Alison Ney</span>
             </h1>
+            <EventDateDisplay 
+              monthName="Diciembre"
+              dayName="Viernes"
+              dayNumber="20"
+              year="2025"
+              time="6:00 PM"
+              className="mt-12 animate-in fade-in duration-1000 delay-700 text-primary"
+            />
           </div>
         </div>
       </div>
@@ -135,49 +142,43 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
       <div 
         className="relative z-10 flex flex-col items-center text-center max-w-2xl w-full backdrop-blur-md rounded-xl shadow-2xl my-8 animate-in fade-in slide-in-from-bottom-10 duration-700 overflow-hidden"
       >
-        <div className="w-full my-8 py-8 animate-in fade-in duration-1000 delay-800 flex flex-col items-center justify-center gap-6 backdrop-blur-md relative">
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[rgba(179,193,176,0.15)] to-transparent"></div>
-          <div className="w-full max-w-md mx-auto relative z-10">
+        <div className="w-full my-8 py-8 animate-in fade-in duration-1000 delay-800 flex flex-col items-center justify-center gap-6 relative">
+          <div className="w-full max-w-lg mx-auto relative z-10">
             <CountdownTimer targetDate={eventTargetDate} />
           </div>
+          
           <AddToCalendarButton 
             event={{
                 title: "Nuestra Boda - Alison Ney & Kevin Zuniga",
                 description: "¡Acompáñanos a celebrar nuestra unión! Te esperamos para compartir este día tan especial.",
-                location: "Restaurante El Horizonte, Carretera Chinandega",
-                receptionLocation: "https://maps.app.goo.gl/SzXAqsLcjhAFVoXa9?g_st=iw",
-                ceremonyLocation: "https://maps.app.goo.gl/EnDGVqjE2e7bHwrK9?g_st=iw",
+                location: "Barrio San Judas, casa de habitación",
+                ceremonyLocation: "https://maps.app.goo.gl/U5ZiL6hu6SSVn8m8A",
                 startTime: eventTargetDate,
                 endTime: "2025-12-21T02:00:00-06:00",
                 timeZone: "America/Managua",
             }}
           />
         </div>
-        
-        <div className="mt-6 relative z-10 flex flex-col items-center text-center space-y-8 sm:space-y-10 p-4 sm:p-4">
-
-          <MusicPlayer audioSrc={audioSrc} autoPlay={isOpened} className="animate-in fade-in duration-1000 delay-500" />
-
-          <EventDateDisplay 
-            monthName="Diciembre"
-            dayName="Viernes"
-            dayNumber="20"
-            year="2025"
-            time="6:00 PM"
-            className="animate-in fade-in duration-1000 delay-700 text-primary"
-          />
-        </div>
           
-        <div className="mt-12 relative z-10 flex flex-col items-center text-center space-y-8 sm:space-y-10 p-4 sm:p-8">
+          <MusicPlayer audioSrc={audioSrc} autoPlay={isOpened} className="mt-12 mb-12 animate-in fade-in duration-1000 delay-500" />
+
+        <div className="mt-12 relative z-10 flex flex-col items-center text-center space-y-8 sm:space-y-10 px-2 sm:px-4">
+          
+        </div>
+        
+        {/* Separador superior - 100% ancho */}
+        <div className="w-screen relative -mx-4 sm:-mx-8 md:-mx-16 lg:-mx-24 xl:-mx-32 z-20">
           <Image 
             src="/separador.png" 
             alt="Separador decorativo" 
-            width={300} 
-            height={50} 
-            className="mx-auto animate-in fade-in duration-1000 delay-100 opacity-50 my-2" 
+            width={1920} 
+            height={100} 
+            className="w-full h-auto animate-in fade-in duration-1000 delay-100 opacity-100" 
             data-ai-hint="decorative separator"
           />
+        </div>
 
+        <div className="relative z-10 flex flex-col items-center text-center space-y-8 sm:space-y-10 px-2 sm:px-4">
           <Card className="bg-transparent border-none shadow-none w-full animate-in fade-in duration-1000 delay-200">
             <CardContent className="font-body text-lg sm:text-xl text-foreground/80 pt-6">
               <p>
@@ -186,48 +187,34 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
               <p className='mt-2 text-foreground/50'>- Ruth 1:16</p>
             </CardContent>
           </Card>
+        </div>
 
+        {/* Separador inferior - 100% ancho */}
+        <div className="w-screen relative -mx-4 sm:-mx-8 md:-mx-16 lg:-mx-24 xl:-mx-32 z-20">
           <Image 
             src="/separador.png" 
             alt="Separador decorativo rotado" 
-            width={300} 
-            height={50} 
-            className="mx-auto animate-in fade-in duration-1000 delay-250 opacity-50 rotate-180 my-2" 
+            width={1920} 
+            height={100} 
+            className="w-full h-auto animate-in fade-in duration-1000 delay-250 opacity-100 rotate-180" 
             data-ai-hint="decorative separator rotated"
           />
-          
         </div>
         
-        <div className="flex flex-col items-center text-center space-y-8 sm:space-y-10 p-4 sm:p-8 pt-0">
-          
-          <div className="w-full animate-in fade-in duration-1000 delay-1000">
-            <SectionCard
-              title="Ceremonia Religiosa"
-              locationButton={{ text: "Ver Ubicación", url: "https://maps.app.goo.gl/EnDGVqjE2e7bHwrK9?g_st=iw" }}
-              titleClassName="text-primary"
-            >
-              <div className="flex flex-col items-center space-y-2 mb-3">
-                 <Image src="/church.png" alt="Iglesia Icon" width={40} height={40} className="shrink-0" data-ai-hint="church building"/>
-              </div>
-              <div className="mt-1 space-y-1 text-center">
-                <p className="flex items-center justify-center">Iglesia Parroquial San Blas</p>
-                <p className="flex items-center justify-center"><i>Chichigalpa, 4:30 PM</i></p>
-              </div>
-            </SectionCard>
-          </div>
-          
+        <div className="flex flex-col items-center text-center space-y-8 sm:space-y-10 px-2 sm:px-4 pt-0">
+        
           <div className="w-full animate-in fade-in duration-1000 delay-1100">
             <SectionCard 
-              title="Recepción"
-              locationButton={{ text: "Ver Ubicación", url: "https://maps.app.goo.gl/SzXAqsLcjhAFVoXa9?g_st=iw" }}
-              titleClassName="text-primary"
+              title="Ceramonia & Recepción"
+              locationButton={{ text: "Ver Ubicación", url: "https://maps.app.goo.gl/U5ZiL6hu6SSVn8m8A" }}
+              titleClassName="font-richford text-primary"
             >
               <div className="flex flex-col items-center space-y-2 mb-3">
                 <Image src="/champagne.png" alt="champagne Icon" width={40} height={40} className="shrink-0" data-ai-hint="champagne"/>
               </div>
               <div className="mt-1 space-y-1 text-center">
-                <p className="flex items-center justify-center">Restaurante El Horizonte</p>
-                <p className="flex items-center justify-center"><i>Carretera Chinandega, 6:00 PM</i></p>
+                <p className="flex items-center justify-center">Barrio San Judas</p>
+                <p className="flex items-center justify-center"><i>Casa de habitación, 6:00 PM</i></p>
               </div>
             </SectionCard>
           </div>
@@ -235,7 +222,7 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
           <div className="w-full animate-in fade-in duration-1000 delay-[1300ms]">
             <SectionCard 
               title="Código de Vestimenta"
-              titleClassName="text-primary"
+              titleClassName="font-richford text-primary"
             >
               <div>
                 <p className='text-sm sm:text-base font-bold'>Formal</p>
@@ -248,8 +235,7 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
           <div className="w-full animate-in fade-in duration-1000 delay-[1400ms]">
             <SectionCard 
               title="Pase Personal" 
-              icon={<UserCheck size={28} className="text-primary"/>}
-              titleClassName="text-primary"
+              titleClassName="font-richford text-primary"
             >
               <p className="text-lg sm:text-xl font-bold text-foreground/90">
                 Invitación Válida para {guestCount} persona{guestCount > 1 ? 's' : ''}
@@ -263,8 +249,7 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
           <div className="w-full animate-in fade-in duration-1000 delay-[1500ms]">
             <SectionCard 
               title="Regalos" 
-              icon={<Gift size={28} className="text-primary"/>}
-              titleClassName="text-primary"
+              titleClassName="font-richford text-primary"
             >
               <p className="flex items-center justify-center gap-2">
                 <span>Agradecemos sus muestras de cariño en sobre.</span>
@@ -275,8 +260,7 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
           <div className="w-full animate-in fade-in duration-1000 delay-[1700ms]">
              <SectionCard
               title="Nota Importante"
-              icon={<Info size={24} className="text-primary" />}
-              titleClassName="text-primary"
+              titleClassName="font-richford text-primary"
              >
                 <p className="text-base sm:text-lg text-foreground/90 px-4">
                   Le pedimos amablemente su presencia sin niños.
@@ -288,7 +272,7 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
         <div 
           className="relative w-full bg-[url('/flowers_deco/flower2.png')] bg-contain bg-no-repeat bg-bottom"
         >
-          <div className="flex flex-col items-center pt-10 pb-24 px-4">
+          <div className="flex flex-col items-center pt-10 pb-24 px-2">
             <div className="flex flex-col items-center animate-in fade-in duration-1000 delay-[200ms] w-full max-w-xs">
               <Button
                 onClick={handleConfirm}
