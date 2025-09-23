@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, ReactNode } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { LogOut } from 'lucide-react';
@@ -9,16 +9,23 @@ import { LogOut } from 'lucide-react';
 export default function AdminLayout({ children }: { children: ReactNode }) {
   const { isAuthenticated, logout } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     const timer = setTimeout(() => {
-        if (!isAuthenticated) {
+        // Only redirect if not authenticated AND not already on login page
+        if (!isAuthenticated && pathname !== '/admin/login') {
             router.push('/admin/login');
         }
     }, 100); 
 
     return () => clearTimeout(timer);
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated, router, pathname]);
+
+  // If on login page, always render children (don't check authentication)
+  if (pathname === '/admin/login') {
+    return <>{children}</>;
+  }
 
   if (!isAuthenticated) {
     return (
