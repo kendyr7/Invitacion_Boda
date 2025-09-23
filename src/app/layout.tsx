@@ -34,10 +34,30 @@ const richford = localFont({
 });
 
 export const metadata: Metadata = {
-  title: 'Nuestra Boda - Kevin Zuniga & Alison Ney',
-  description: 'Nos casamos y queremos que seas parte de este día tan especial.',
+  title: 'Kevin & Alison - Invitación de Boda',
+  description: 'Te invitamos a celebrar nuestro amor. Kevin Zuniga & Alison Ney se casan y queremos que seas parte de este día tan especial. Únete a nosotros en esta celebración única.',
+  keywords: ['boda', 'invitación', 'Kevin Zuniga', 'Alison Ney', 'matrimonio', 'celebración', 'amor'],
+  authors: [{ name: 'Kevin & Alison' }],
+  openGraph: {
+    title: 'Kevin & Alison - Invitación de Boda',
+    description: 'Te invitamos a celebrar nuestro amor. Únete a nosotros en este día tan especial.',
+    type: 'website',
+    locale: 'es_ES',
+    siteName: 'Boda Kevin & Alison',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Kevin & Alison - Invitación de Boda',
+    description: 'Te invitamos a celebrar nuestro amor. Únete a nosotros en este día tan especial.',
+  },
+  robots: {
+    index: false,
+    follow: false,
+  },
   icons: {
-    icon: '/favicon-32x32.png',
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
+    apple: '/favicon.svg',
   },
 };
 

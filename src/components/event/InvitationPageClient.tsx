@@ -212,14 +212,14 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
             <SectionCard 
               title="Ceramonia & Recepción"
               locationButton={{ text: "Ver Ubicación", url: "https://maps.app.goo.gl/U5ZiL6hu6SSVn8m8A" }}
-              titleClassName="font-richford text-4xl text-primary"
+              titleClassName="font-richford text-5xl text-primary"
             >
               <div className="flex flex-col items-center space-y-2 mb-3">
                 <Image src="/champagne.png" alt="champagne Icon" width={40} height={40} className="shrink-0" data-ai-hint="champagne"/>
               </div>
               <div className="mt-1 space-y-1 text-center">
                 <p className="flex items-center justify-center">Barrio San Judas</p>
-                <p className="flex items-center justify-center"><i>Casa de habitación, 6:00 PM</i></p>
+                <p className="flex items-center justify-center"><i>Casa de habitación</i></p>
               </div>
             </SectionCard>
           </div>
@@ -227,7 +227,7 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
           <div className="w-full animate-in fade-in duration-1000 delay-[1300ms]">
             <SectionCard 
               title="Código de Vestimenta"
-              titleClassName="font-richford text-4xl text-primary"
+              titleClassName="font-richford text-5xl text-primary"
             >
               <div>
                 <p className='text-sm sm:text-base font-bold'>Formal</p>
@@ -241,7 +241,7 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
           <div className="w-full max-w-2xl mx-auto px-6 py-8">
             {/* Encabezado principal */}
             <div className="text-center mb-12">
-              <h2 className="font-richford text-4xl text-primary font-bold">
+              <h2 className="font-richford text-5xl text-primary font-bold">
                 Información Importante
               </h2>
             </div>
