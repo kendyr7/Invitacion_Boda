@@ -109,10 +109,9 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
   }
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen text-foreground relative overflow-auto sm:overflow-hidden">
-
+    <main>
       <div className="mt-16 animate-in fade-in duration-1000 delay-400 mb-4 sm:mb-6 w-screen relative -mx-4 sm:-mx-8 md:-mx-16 lg:-mx-24 xl:-mx-32">
-        <div className="w-[110%] -ml-[5%] relative">
+        <div className="w-[110%] -ml-5%] relative">
           <Image 
             src="/cover.png" 
             alt="Wedding Cover" 
@@ -122,31 +121,34 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
             data-ai-hint="wedding cover"
           />
           <div className="absolute inset-0 z-10 flex flex-col items-center justify-center">
-            <h1 className="text-4xl sm:text-5xl text-primary flex flex-col items-center justify-center">
+            <h1 className="text-5xl sm:text-5xl text-primary flex flex-col items-center justify-center">
               <span className="font-richford drop-shadow-lg">Kevin Zuniga</span>
               <span className="font-eve-adam text-2xl sm:text-2xl my-2 drop-shadow-lg">&</span>
               <span className="font-richford drop-shadow-lg">Alison Ney</span>
             </h1>
-            <EventDateDisplay 
-              monthName="Diciembre"
-              dayName="Viernes"
-              dayNumber="20"
-              year="2025"
-              time="6:00 PM"
-              className="mt-12 animate-in fade-in duration-1000 delay-700 text-primary"
-            />
+
+            <div className="mt-8 text-center space-y-8 sm:space-y-10 px-2 sm:px-4">
+              <EventDateDisplay 
+                monthName="Diciembre"
+                dayName="Viernes"
+                dayNumber="20"
+                year="2025"
+                time="6:00 PM"
+                className="mt-12 animate-in fade-in duration-1000 delay-700 text-primary"
+              />
+            </div>
           </div>
         </div>
       </div>
       
       <div 
-        className="relative z-10 flex flex-col items-center text-center max-w-2xl w-full backdrop-blur-md rounded-xl shadow-2xl my-8 animate-in fade-in slide-in-from-bottom-10 duration-700 overflow-hidden"
+        className="relative z-10 flex flex-col items-center text-center max-w-2xl w-full rounded-xl shadow-2xl my-8 animate-in fade-in slide-in-from-bottom-10 duration-700 overflow-hidden"
       >
         <div className="w-full my-8 py-8 animate-in fade-in duration-1000 delay-800 flex flex-col items-center justify-center gap-6 relative">
           <div className="w-full max-w-lg mx-auto relative z-10">
             <CountdownTimer targetDate={eventTargetDate} />
           </div>
-          
+
           <AddToCalendarButton 
             event={{
                 title: "Nuestra Boda - Alison Ney & Kevin Zuniga",
@@ -179,7 +181,7 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
         </div>
 
         <div className="relative z-10 flex flex-col items-center text-center space-y-8 sm:space-y-10 px-2 sm:px-4">
-          <Card className="bg-transparent border-none shadow-none w-full animate-in fade-in duration-1000 delay-200">
+          <Card className="border-none shadow-none w-full animate-in fade-in duration-1000 delay-200">
             <CardContent className="font-body text-lg sm:text-xl text-foreground/80 pt-6">
               <p>
                 ... No me ruegues que te deje y que me aparte de ti; porque adondequiera que tú fueres, iré yo, y dondequiera que vivieres, viviré. Tu pueblo será mi pueblo, y tu Dios mi Dios.
