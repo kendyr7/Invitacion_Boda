@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
@@ -21,33 +22,112 @@ interface ConfirmationStatus {
 }
 
 export default function ConfirmationPage() {
-  const [guestNames, setGuestNames] = useState<string[]>([]);
+  const [guestNames, setGuestNames] = useState<string[]>(['']);
   const [guestCount, setGuestCount] = useState(1);
   const [specialMessage, setSpecialMessage] = useState('');
   const [confirmationStatus, setConfirmationStatus] = useState<ConfirmationStatus>({ isConfirmed: false });
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [showEventDetails, setShowEventDetails] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
 
   useEffect(() => {
+    // Get the guest count from the referrer URL or session storage
+    const getReferrerGuestCount = () => {
+      // First try to get from session storage (if set from invitation page)
+      const storedCount = sessionStorage.getItem('guestCount');
+      if (storedCount) {
+        return parseInt(storedCount, 10);
+      }
+
+      // Try to extract from document.referrer
+      if (document.referrer) {
+        const referrerUrl = new URL(document.referrer);
+        const pathParts = referrerUrl.pathname.split('/');
+        const invitationIndex = pathParts.indexOf('invitation');
+        
+        if (invitationIndex !== -1 && pathParts[invitationIndex + 1]) {
+          const count = parseInt(pathParts[invitationIndex + 1], 10);
+          if (!isNaN(count) && count > 0) {
+            return count;
+          }
+        }
+      }
+
+      return 1; // Default to 1 guest
+    };
+
+    // Check if we have stored guest names (coming from previous confirmation)
     const storedGuestNames = sessionStorage.getItem('guestNames');
     const storedGuestCount = sessionStorage.getItem('guestCount');
     
-    if (!storedGuestNames || !storedGuestCount) {
-      router.push('/guest-login');
+    if (storedGuestNames && storedGuestCount) {
+      const names = JSON.parse(storedGuestNames);
+      const count = parseInt(storedGuestCount, 10);
+      
+      setGuestNames(names);
+      setGuestCount(count);
+      setShowEventDetails(true);
+      checkConfirmationStatus(names);
+    } else {
+      // New visitor - set up for initial guest name entry
+      const count = getReferrerGuestCount();
+      setGuestCount(count);
+      setGuestNames(new Array(count).fill(''));
+    }
+  }, []);
+
+  const handleNameChange = (index: number, value: string) => {
+    const newNames = [...guestNames];
+    newNames[index] = value;
+    setGuestNames(newNames);
+  };
+
+  const handleGuestNamesSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Validate all guest names
+    const validNames = guestNames.filter(name => name.trim());
+    if (validNames.length !== guestCount) {
+      toast({
+        title: "Campos requeridos",
+        description: `Por favor, ingresa ${guestCount === 1 ? 'tu nombre completo' : `los ${guestCount} nombres completos`}.`,
+        variant: "destructive",
+      });
       return;
     }
-    
-    const names = JSON.parse(storedGuestNames);
-    const count = parseInt(storedGuestCount, 10);
-    
-    setGuestNames(names);
-    setGuestCount(count);
-    checkConfirmationStatus(names);
-  }, [router]);
 
+    setIsLoading(true);
+    
+    try {
+      // Store guest names in session storage
+      sessionStorage.setItem('guestNames', JSON.stringify(validNames));
+      sessionStorage.setItem('guestCount', guestCount.toString());
+      
+      // Update state to show event details
+      setGuestNames(validNames);
+      setShowEventDetails(true);
+      
+      // Check confirmation status for these names
+      await checkConfirmationStatus(validNames);
+      
+      toast({
+        title: "¡Perfecto!",
+        description: "Ahora puedes ver los detalles del evento y confirmar tu asistencia.",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Ocurrió un error. Por favor, inténtalo de nuevo.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
   const checkConfirmationStatus = async (names: string[]) => {
+    setIsLoading(true);
     try {
       if (!db) {
         throw new Error('Firebase not initialized');
@@ -121,9 +201,14 @@ export default function ConfirmationPage() {
       });
       
       toast({
-        title: "¡Confirmación exitosa!",
-        description: "Tu asistencia ha sido confirmada. ¡Nos vemos en la boda!",
+        title: "¡Confirmación enviada exitosamente!",
+        description: "Tu confirmación ha sido enviada y Kevin y Alison han sido notificados. ¡Gracias por confirmar tu asistencia!",
       });
+
+      // Redirect to invitation page after envelope section after a short delay
+      setTimeout(() => {
+        router.push('/?confirmed=true');
+      }, 2000);
     } catch (error) {
       console.error('Error confirming attendance:', error);
       toast({
@@ -168,8 +253,12 @@ export default function ConfirmationPage() {
   };
 
   const handleBackToLogin = () => {
+    // Reset all relevant state
     sessionStorage.removeItem('guestName');
-    router.push('/guest-login');
+    sessionStorage.removeItem('guestNames');
+    setGuestNames(['']);
+    setShowEventDetails(false);
+setConfirmationStatus({ isConfirmed: false });
   };
 
   if (isLoading) {
@@ -195,28 +284,87 @@ export default function ConfirmationPage() {
       />
       
       <div className="w-full max-w-2xl z-10 space-y-6">
-        {/* Welcome Card */}
-        <Card className="bg-background/80 dark:bg-neutral-900/80 backdrop-blur-md shadow-2xl bg-[url('/paper-texture.jpg')] bg-cover bg-center">
-          <CardHeader className="text-center">
-            <div className="flex justify-center mb-4">
-              <Image 
-                src="/ring.png"
-                alt="Wedding rings"
-                width={60}
-                height={60}
-                className="opacity-80"
-              />
-            </div>
-            <CardTitle className="text-2xl font-headline text-primary">
-              ¡Hola, {guestNames.length > 1 ? guestNames.join(' y ') : guestNames[0]}!
-            </CardTitle>
-            <CardDescription className="text-foreground/70">
-              Estado de {guestCount > 1 ? 'su' : 'tu'} confirmación para la boda
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="text-center">
-            <div className="flex items-center justify-center gap-3 mb-6">
-              {confirmationStatus.isConfirmed ? (
+        {/* Top Section - Changes based on showEventDetails state */}
+        {!showEventDetails ? (
+          /* Guest Names Input Form */
+          <Card className="bg-background/80 dark:bg-neutral-900/80 backdrop-blur-md shadow-2xl bg-[url('/paper-texture.jpg')] bg-cover bg-center">
+            <CardHeader className="text-center">
+              <div className="flex justify-center mb-4">
+                <Image 
+                  src="/ring.png"
+                  alt="Wedding rings"
+                  width={60}
+                  height={60}
+                  className="opacity-80"
+                />
+              </div>
+              <CardTitle className="text-2xl font-headline text-primary">Confirmación de Asistencia</CardTitle>
+              <CardDescription className="text-foreground/70">
+                {guestCount === 1 
+                  ? "Ingresa tu nombre para confirmar tu asistencia a la boda"
+                  : `Ingresa los nombres de los ${guestCount} invitados para confirmar su asistencia`
+                }
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleGuestNamesSubmit} className="space-y-4">
+                {guestNames.map((name, index) => (
+                  <div key={index} className="space-y-2">
+                    <Label htmlFor={`guestName${index}`} className="text-foreground/80">
+                      {guestCount === 1 ? 'Nombre Completo' : `Nombre del Invitado ${index + 1}`}
+                    </Label>
+                    <Input
+                      id={`guestName${index}`}
+                      type="text"
+                      placeholder={guestCount === 1 ? "Tu nombre y apellido" : `Nombre y apellido del invitado ${index + 1}`}
+                      required
+                      value={name}
+                      onChange={(e) => handleNameChange(index, e.target.value)}
+                      className="bg-white/80 border-primary text-center"
+                      disabled={isLoading}
+                    />
+                  </div>
+                ))}
+                <Button 
+                  type="submit" 
+                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-headline text-lg py-3 rounded-lg shadow-lg hover:shadow-xl transition-all transform hover:scale-105"
+                  disabled={isLoading}
+                >
+                  {isLoading ? 'Procesando...' : 'Continuar'}
+                </Button>
+              </form>
+              
+              <div className="mt-6 text-center">
+                <p className="text-sm text-foreground/60">
+                  Fecha límite de confirmación: 28 de Noviembre 2025
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        ) : (
+          <>
+            {/* Welcome Card */}
+            <Card className="bg-background/80 dark:bg-neutral-900/80 backdrop-blur-md shadow-2xl bg-[url('/paper-texture.jpg')] bg-cover bg-center">
+              <CardHeader className="text-center">
+                <div className="flex justify-center mb-4">
+                  <Image 
+                    src="/ring.png"
+                    alt="Wedding rings"
+                    width={60}
+                    height={60}
+                    className="opacity-80"
+                  />
+                </div>
+                <CardTitle className="text-2xl font-headline text-primary">
+                  ¡Hola, {guestNames.length > 1 ? guestNames.join(' y ') : guestNames[0]}!
+                </CardTitle>
+                <CardDescription className="text-foreground/70">
+                  Estado de {guestCount > 1 ? 'su' : 'tu'} confirmación para la boda
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="text-center">
+                <div className="flex items-center justify-center gap-3 mb-6">
+                  {confirmationStatus.isConfirmed ? (
                 <>
                   <CheckCircle className="h-8 w-8 text-green-500" />
                   <div>
@@ -289,8 +437,10 @@ export default function ConfirmationPage() {
             </div>
           </CardContent>
         </Card>
+        </>
+        )}
 
-        {/* Event Details Card */}
+        {/* Event Details Card - Always visible */}
         <Card className="bg-background/80 dark:bg-neutral-900/80 backdrop-blur-md shadow-2xl bg-[url('/paper-texture.jpg')] bg-cover bg-center">
           <CardHeader>
             <CardTitle className="text-xl font-headline text-primary text-center">Detalles del Evento</CardTitle>

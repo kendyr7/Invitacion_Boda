@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Users, Archive, ArchiveRestore, Trash2, Edit, Settings } from 'lucide-react';
+import { Users, Archive, ArchiveRestore, Trash2, Edit, Settings, TableProperties } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -23,6 +23,7 @@ import { clearAllAttendees } from "@/actions/clearDatabase";
 import type { Attendee } from "@/actions/attendees";
 import { useEffect } from 'react';
 import { EditAttendeeModal } from '@/components/EditAttendeeModal';
+import { TableAssignmentModal } from '@/components/TableAssignmentModal';
 
 const AttendeeTable = ({ attendees, isArchived, onToggleArchive, onClearDatabase, onEditAttendee }: { 
   attendees: Attendee[], 
@@ -85,15 +86,17 @@ const AttendeeTable = ({ attendees, isArchived, onToggleArchive, onClearDatabase
                 <TableCell>{attendee.confirmedAt}</TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-1">
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      onClick={() => onEditAttendee(attendee)}
-                      title="Editar invitado"
-                    >
-                      <Edit className="h-4 w-4 text-blue-600" />
-                      <span className="sr-only">Editar</span>
-                    </Button>
+                    {!isArchived && (
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        onClick={() => onEditAttendee(attendee)}
+                        title="Asignar mesa"
+                      >
+                        <TableProperties className="h-4 w-4 text-blue-600" />
+                        <span className="sr-only">Asignar Mesa</span>
+                      </Button>
+                    )}
                     <Button 
                       variant="ghost" 
                       size="icon" 
@@ -170,18 +173,20 @@ const AttendeeTable = ({ attendees, isArchived, onToggleArchive, onClearDatabase
 
                   {/* Actions */}
                   <div className="flex gap-2 pt-2">
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onEditAttendee(attendee);
-                      }}
-                      className="flex-1"
-                    >
-                      <Edit className="h-4 w-4 mr-2" />
-                      Editar
-                    </Button>
+                    {!isArchived && (
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onEditAttendee(attendee);
+                        }}
+                        className="flex-1"
+                      >
+                        <TableProperties className="h-4 w-4 mr-2" />
+                        Asignar Mesa
+                      </Button>
+                    )}
                     <Button 
                       variant={isArchived ? "default" : "destructive"}
                       size="sm" 
@@ -189,7 +194,7 @@ const AttendeeTable = ({ attendees, isArchived, onToggleArchive, onClearDatabase
                         e.stopPropagation();
                         onToggleArchive(attendee.id);
                       }}
-                      className="flex-1"
+                      className={isArchived ? "flex-1" : "flex-1"}
                     >
                       {isArchived ? (
                         <>
@@ -225,6 +230,8 @@ export default function AttendeesPage() {
   const [isPending, startTransition] = useTransition();
   const [editingAttendee, setEditingAttendee] = useState<Attendee | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [tableAssignmentAttendee, setTableAssignmentAttendee] = useState<Attendee | null>(null);
+  const [isTableAssignmentModalOpen, setIsTableAssignmentModalOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [deletePassword, setDeletePassword] = useState('');
   const { toast } = useToast();
@@ -267,8 +274,19 @@ export default function AttendeesPage() {
     setIsEditModalOpen(true);
   };
 
+  const handleTableAssignment = (attendee: Attendee) => {
+    setTableAssignmentAttendee(attendee);
+    setIsTableAssignmentModalOpen(true);
+  };
+
   const handleEditSuccess = async () => {
     // Refresh attendees list after successful edit
+    const updatedAttendees = await getAttendees();
+    setAttendees(updatedAttendees);
+  };
+
+  const handleTableAssignmentSuccess = async () => {
+    // Refresh attendees list after successful table assignment
     const updatedAttendees = await getAttendees();
     setAttendees(updatedAttendees);
   };
@@ -276,6 +294,11 @@ export default function AttendeesPage() {
   const handleCloseEditModal = () => {
     setIsEditModalOpen(false);
     setEditingAttendee(null);
+  };
+
+  const handleCloseTableAssignmentModal = () => {
+    setIsTableAssignmentModalOpen(false);
+    setTableAssignmentAttendee(null);
   };
 
   const handleClearDatabase = async () => {
@@ -317,6 +340,11 @@ export default function AttendeesPage() {
   
   const activeAttendees = attendees.filter(a => !a.archived);
   const archivedAttendees = attendees.filter(a => a.archived);
+  
+  // Calculate total number of guests (not just records)
+  const totalConfirmedGuests = activeAttendees.reduce((total, attendee) => {
+    return total + (attendee.numberOfGuests || 1);
+  }, 0);
 
   return (
     <main className="flex min-h-screen flex-col items-center bg-background p-4 pt-0 sm:p-8">
@@ -329,7 +357,7 @@ export default function AttendeesPage() {
             </CardTitle>
             <div className="flex items-center justify-end gap-3 text-right">
                 <span className="text-lg font-medium text-muted-foreground">Total Confirmados:</span>
-                <Badge className="text-xl px-4 py-1">{activeAttendees.length}</Badge>
+                <Badge className="text-xl px-4 py-1">{totalConfirmedGuests}</Badge>
             </div>
            </div>
         </CardHeader>
@@ -341,12 +369,12 @@ export default function AttendeesPage() {
             </TabsList>
             <TabsContent value="active" className="mt-4">
                <AttendeeTable 
-                 attendees={activeAttendees} 
-                 isArchived={false} 
-                 onToggleArchive={handleToggleArchive}
-                 onClearDatabase={handleClearDatabase}
-                 onEditAttendee={handleEditAttendee}
-               />
+              attendees={activeAttendees} 
+              isArchived={false} 
+              onToggleArchive={handleToggleArchive}
+              onClearDatabase={handleClearDatabase}
+              onEditAttendee={handleTableAssignment}
+            />
             </TabsContent>
             <TabsContent value="archived" className="mt-4">
               <AttendeeTable 
@@ -371,13 +399,13 @@ export default function AttendeesPage() {
               className="h-12 w-12 rounded-full shadow-lg bg-background border-2"
               title="Configuración de administrador"
             >
-              <Settings className="h-5 w-5" />
+              <Trash2 className="h-5 w-5" />
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
-                <Settings className="h-5 w-5" />
+                <Trash2 className="h-5 w-5" />
                 Configuración de Administrador
               </DialogTitle>
               <DialogDescription>
@@ -440,6 +468,13 @@ export default function AttendeesPage() {
         isOpen={isEditModalOpen}
         onClose={handleCloseEditModal}
         onSuccess={handleEditSuccess}
+      />
+      
+      <TableAssignmentModal
+        attendee={tableAssignmentAttendee}
+        isOpen={isTableAssignmentModalOpen}
+        onClose={handleCloseTableAssignmentModal}
+        onSuccess={handleTableAssignmentSuccess}
       />
     </main>
   );

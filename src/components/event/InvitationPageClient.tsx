@@ -50,6 +50,20 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
   const eventTargetDate = "2025-12-20T18:00:00-06:00";
 
   useEffect(() => {
+    // Check if user was redirected after confirmation
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('confirmed') === 'true') {
+      setIsOpened(true); // Skip envelope, go directly to invitation
+      toast({
+        title: "¡Confirmación enviada exitosamente!",
+        description: "Tu confirmación ha sido enviada y Kevin y Alison han sido notificados. ¡Gracias por confirmar tu asistencia!",
+      });
+      // Clean up URL
+      window.history.replaceState({}, '', '/');
+    }
+  }, [toast]);
+
+  useEffect(() => {
     if (!isOpened) return;
 
     const handleScroll = () => {
@@ -82,7 +96,7 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
     // Store guest count in session storage for the guest login page
     sessionStorage.setItem('guestCount', guestCount.toString());
     // Redirect to guest login page for confirmation
-    router.push('/guest-login');
+    router.push('/confirmation');
   };
 
   if (!isOpened) {
@@ -131,18 +145,18 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
               alt="Kevin y Alison" 
               className="w-auto h-55 sm:h-40 drop-shadow-lg"
             />
+            <EventDateDisplay 
+              monthName="Diciembre"
+              dayName="Viernes"
+              dayNumber="20"
+              year="2025"
+              time="6:00 PM"
+              className="mt-4 animate-in fade-in duration-1000 delay-700 text-primary scale-75 sm:scale-90"
+            />
           </div>
         </div>
       </div>
-
-      <EventDateDisplay 
-        monthName="Diciembre"
-        dayName="Viernes"
-        dayNumber="20"
-        year="2025"
-        time="6:00 PM"
-        className="mt-12 animate-in fade-in duration-1000 delay-700 text-primary"
-      />
+      <br className='mt-16'/>
       
       <div 
         className="relative z-10 flex flex-col items-center text-center max-w-2xl w-full rounded-xl shadow-2xl my-8 animate-in fade-in slide-in-from-bottom-10 duration-700 overflow-hidden"
@@ -185,11 +199,11 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
 
         <div className="relative z-10 flex flex-col items-center text-center space-y-8 sm:space-y-10 px-2 sm:px-4">
           <Card className="border-none shadow-none w-full animate-in fade-in duration-1000 delay-200">
-            <CardContent className="font-body text-lg sm:text-xl text-foreground/80 pt-6">
+            <CardContent className="font-body text-lg sm:text-xl text-primary pt-6">
               <p>
                 ... No me ruegues que te deje y que me aparte de ti; porque adondequiera que tú fueres, iré yo, y dondequiera que vivieres, viviré. Tu pueblo será mi pueblo, y tu Dios mi Dios.
               </p>
-              <p className='mt-2 text-foreground/50'>- Ruth 1:16</p>
+              <p className='mt-2 text-foreground/50 italic'>- Ruth 1:16</p>
             </CardContent>
           </Card>
         </div>
@@ -205,12 +219,13 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
             data-ai-hint="decorative separator rotated"
           />
         </div>
+        <br className="mt-12"/>
+  
+        <div className="flex flex-col items-center text-center space-y-8 sm:space-y-10 px-2 sm:px-4 pt-0 mt-12">
         
-        <div className="flex flex-col items-center text-center space-y-8 sm:space-y-10 px-2 sm:px-4 pt-0">
-        
-          <div className="w-full animate-in fade-in duration-1000 delay-1100">
+          <div className="w-full animate-in fade-in duration-1000 delay-1100 mt-12 mb-12">
             <SectionCard 
-              title="Ceramonia & Recepción"
+              title="Ceremonia & Recepción"
               locationButton={{ text: "Ver Ubicación", url: "https://maps.app.goo.gl/U5ZiL6hu6SSVn8m8A" }}
               titleClassName="font-richford text-5xl text-primary"
             >
@@ -224,7 +239,7 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
             </SectionCard>
           </div>
 
-          <div className="w-full animate-in fade-in duration-1000 delay-[1300ms]">
+          <div className="w-full animate-in fade-in duration-1000 delay-[1300ms] mt-12 mb-12">
             <SectionCard 
               title="Código de Vestimenta"
               titleClassName="font-richford text-5xl text-primary"
@@ -233,12 +248,12 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
                 <p className='text-sm sm:text-base font-bold'>Formal</p>
               </div>
                <Image src="/dress-codex.png" alt="Código de Vestimenta Formal" width={200} height={200} className="mx-auto mt-3 mb-3" data-ai-hint="formal attire" />
-               <p className="text-base sm:text-lg text-foreground/90"><br />Con cariño te pedimos considerar color BLANCO reservado únicamente para la novia.</p>
+               <p className="text-base sm:text-lg text-primary"><br />Con cariño te pedimos considerar color BLANCO reservado únicamente para la novia.</p>
             </SectionCard>
           </div>
           
           {/* Información Importante - Timeline */}
-          <div className="w-full max-w-2xl mx-auto px-6 py-8">
+          <div className="w-full max-w-2xl mx-auto px-6 py-8 mt-12 mb-12">
             {/* Encabezado principal */}
             <div className="text-center mb-12">
               <h2 className="font-richford text-5xl text-primary font-bold">
@@ -253,11 +268,11 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
                 <span className="text-primary font-bold text-2xl">1</span>
                 <div className="w-px h-20 bg-primary/30 mt-1"></div>
                 <div className="flex-1 text-left">
-                  <h3 className="text-md font-bold text-gray-500 tracking-[0.3em]">PASE PERSONAL</h3>
-                  <p className="text-base text-gray-400">
+                  <h3 className="text-md font-bold text-primary tracking-[0.3em]">PASE PERSONAL</h3>
+                  <p className="text-base text-gray-500">
                     Invitación válida para {guestCount} persona{guestCount > 1 ? 's' : ''}
                   </p>
-                  <p className="text-sm text-gray-600 italic">
+                  <p className="text-sm text-primary italic">
                     Este pase es personal e intransferible.
                   </p>
                 </div>
@@ -268,8 +283,8 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
                 <span className="text-primary font-bold text-2xl">2</span>
                 <div className="w-px h-16 bg-primary/30 mt-1"></div>
                 <div className="flex-1 text-left">
-                  <h3 className="text-md font-bold text-gray-500 tracking-[0.3em]">REGALOS</h3>
-                  <p className="text-base text-gray-400">
+                  <h3 className="text-md font-bold text-primary tracking-[0.3em]">REGALOS</h3>
+                  <p className="text-base text-gray-500">
                     Agradecemos sus muestras de cariño en sobre.
                   </p>
                 </div>
@@ -280,8 +295,8 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
                 <span className="text-primary font-bold text-2xl">3</span>
                 <div className="w-px h-16 bg-primary/30 mt-1"></div>
                 <div className="flex-1 text-left">
-                  <h3 className="text-md font-bold text-gray-500 tracking-[0.3em]">NOTA IMPORTANTE</h3>
-                  <p className="text-base text-gray-400">
+                  <h3 className="text-md font-bold text-primary tracking-[0.3em]">NOTA IMPORTANTE</h3>
+                  <p className="text-base text-gray-500">
                     Le pedimos amablemente su presencia sin niños.
                   </p>
                 </div>
