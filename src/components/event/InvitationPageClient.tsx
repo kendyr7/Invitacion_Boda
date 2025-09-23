@@ -109,7 +109,8 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
   }
 
   return (
-    <main>
+    <main className="flex flex-col items-center justify-center min-h-screen bg-background text-foreground relative overflow-auto sm:overflow-hidden">
+
       <div className="mt-16 animate-in fade-in duration-1000 delay-400 mb-4 sm:mb-6 w-screen relative -mx-4 sm:-mx-8 md:-mx-16 lg:-mx-24 xl:-mx-32">
         <div className="w-[110%] -ml-5%] relative">
           <Image 
@@ -127,7 +128,7 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
               <span className="font-richford drop-shadow-lg">Alison Ney</span>
             </h1>
 
-            <div className="mt-8 text-center space-y-8 sm:space-y-10 px-2 sm:px-4">
+            <div className="mt-8 flex flex-col items-center justify-center w-[40%]">
               <EventDateDisplay 
                 monthName="Diciembre"
                 dayName="Viernes"
@@ -234,47 +235,63 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
             </SectionCard>
           </div>
           
-          <div className="w-full animate-in fade-in duration-1000 delay-[1400ms]">
-            <SectionCard 
-              title="Pase Personal" 
-              titleClassName="font-richford text-primary"
-            >
-              <p className="text-lg sm:text-xl font-bold text-foreground/90">
-                Invitación Válida para {guestCount} persona{guestCount > 1 ? 's' : ''}
-              </p>
-               <p className="text-sm text-foreground/70 mt-2 px-4">
-                 Este pase es personal e intransferible.
-               </p>
-            </SectionCard>
-          </div>
+          {/* Información Importante - Timeline */}
+          <div className="w-full max-w-2xl mx-auto px-6 py-8">
+            {/* Encabezado principal */}
+            <div className="text-center mb-12">
+              <h2 className="font-richford text-3xl text-primary italic font-bold">
+                Información Importante
+              </h2>
+            </div>
 
-          <div className="w-full animate-in fade-in duration-1000 delay-[1500ms]">
-            <SectionCard 
-              title="Regalos" 
-              titleClassName="font-richford text-primary"
-            >
-              <p className="flex items-center justify-center gap-2">
-                <span>Agradecemos sus muestras de cariño en sobre.</span>
-              </p>
-            </SectionCard>
-          </div>
+            {/* Timeline */}
+            <div className="space-y-8">
+              {/* Item 1 - Pase Personal */}
+              <div className="flex items-start gap-4 animate-in fade-in duration-1000 delay-[1400ms]">
+                <span className="text-primary font-bold text-2xl">1</span>
+                <div className="w-px h-20 bg-primary/30 mt-1"></div>
+                <div className="flex-1 text-left">
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">Pase Personal</h3>
+                  <p className="text-lg font-semibold text-gray-700 mb-1">
+                    Invitación válida para {guestCount} persona{guestCount > 1 ? 's' : ''}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    Este pase es personal e intransferible.
+                  </p>
+                </div>
+              </div>
 
-          <div className="w-full animate-in fade-in duration-1000 delay-[1700ms]">
-             <SectionCard
-              title="Nota Importante"
-              titleClassName="font-richford text-primary"
-             >
-                <p className="text-base sm:text-lg text-foreground/90 px-4">
-                  Le pedimos amablemente su presencia sin niños.
-                </p>
-             </SectionCard>
+              {/* Item 2 - Regalos */}
+              <div className="flex items-start gap-4 animate-in fade-in duration-1000 delay-[1500ms]">
+                <span className="text-primary font-bold text-2xl">2</span>
+                <div className="w-px h-16 bg-primary/30 mt-1"></div>
+                <div className="flex-1 text-left">
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">Regalos</h3>
+                  <p className="text-base text-gray-700">
+                    Agradecemos sus muestras de cariño en sobre.
+                  </p>
+                </div>
+              </div>
+
+              {/* Item 3 - Nota Importante */}
+              <div className="flex items-start gap-4 animate-in fade-in duration-1000 delay-[1700ms]">
+                <span className="text-primary font-bold text-2xl">3</span>
+                <div className="w-px h-16 bg-primary/30 mt-1"></div>
+                <div className="flex-1 text-left">
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">Nota Importante</h3>
+                  <p className="text-base text-gray-700">
+                    Le pedimos amablemente su presencia sin niños.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         
         <div 
           className="relative w-full bg-[url('/flowers_deco/flower2.png')] bg-contain bg-no-repeat bg-bottom"
         >
-          <div className="flex flex-col items-center pt-10 pb-24 px-2">
+          <div className="flex flex-col items-center pt-10 px-2">
             <div className="flex flex-col items-center animate-in fade-in duration-1000 delay-[200ms] w-full max-w-xs">
               <Button
                 onClick={handleConfirm}
@@ -288,6 +305,17 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
               </p>
             </div>
           </div>
+        </div>
+
+        {/* Separador antes del footer */}
+        <div className="w-full">
+          <Image 
+            src="/separador2.png" 
+            alt="Separador decorativo" 
+            width={1200} 
+            height={100} 
+            className="w-full h-auto object-cover" 
+          />
         </div>
 
         {/* Footer */}
