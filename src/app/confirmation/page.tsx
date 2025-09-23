@@ -317,7 +317,7 @@ export default function ConfirmationPage() {
                 <MapPin className="h-5 w-5 text-primary" />
                 <div>
                   <p className="font-semibold">Lugar</p>
-                  <p className="text-sm text-foreground/70">Carretera Chinandega</p>
+                  <p className="text-sm text-foreground/70">Barrio San Judas, casa de habitación</p>
                 </div>
               </div>
               

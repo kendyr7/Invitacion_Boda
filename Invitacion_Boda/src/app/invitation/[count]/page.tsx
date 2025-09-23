@@ -3,12 +3,13 @@
 
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import MusicPlayer from '@/components/event/MusicPlayer';
 import CountdownTimer from '@/components/event/CountdownTimer';
 import { Card, CardContent } from '@/components/ui/card';
 import SectionCard from '@/components/event/SectionCard';
 import EventDateDisplay from '@/components/event/EventDateDisplay';
-import { Input } from '@/components/ui/input';
+
 import { 
   Gift, 
   ListChecks,
@@ -19,7 +20,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { useToast } from "@/hooks/use-toast";
 import AddToCalendarButton from '@/components/event/AddToCalendarButton';
-import type { Metadata, ResolvingMetadata } from 'next'
 
 const InstagramIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
@@ -40,32 +40,16 @@ const InstagramIcon = (props: React.SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-type Props = {
-  params: { count: string }
-}
- 
-// Remove 'use client' directive and move generateMetadata to a separate server component
-export const generateMetadata = async (
-  { params }: Props,
-  parent: ResolvingMetadata
-): Promise<Metadata> => {
-  const count = parseInt(params.count, 10) || 1
- 
-  return {
-    title: 'Nuestra Boda - Axel & Julissa',
-    description: `Nos casamos y queremos que seas parte de este día tan especial. Pase válido para ${count} persona${count > 1 ? 's' : ''}.`,
-  }
-}
 
-
-export default function InvitationPage({ params }: { params: { count: string } }) {
+export default function InvitationPageClient({ params }: { params: { count: string } }) {
+  const guestCount = parseInt(params.count);
   const [isOpened, setIsOpened] = useState(false);
-  const [guestName, setGuestName] = useState('');
+
   const [showBackToTop, setShowBackToTop] = useState(false);
   const { toast } = useToast();
+  const router = useRouter();
   const audioSrc = "/audio/Light Sleeping At Last.mp3"; 
-  const eventTargetDate = "2025-08-16T18:00:00-06:00";
-  const guestCount = parseInt(params.count, 10) || 1;
+  const eventTargetDate = "2025-12-20T18:00:00-06:00";
 
   useEffect(() => {
     if (!isOpened) return;
@@ -97,33 +81,16 @@ export default function InvitationPage({ params }: { params: { count: string } }
   };
 
   const handleConfirm = () => {
-    if (!guestName.trim()) {
-      toast({
-        title: "Campo requerido",
-        description: "Por favor, ingresa tu nombre y apellido para confirmar.",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    const phoneNumber = "50557339437";
-    const message = `¡Hola! 👋 Confirmo mi asistencia a la boda. Mi nombre es ${guestName.trim()}. ¡Nos vemos! 🎉`;
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-    
-    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
-    
-    toast({
-        title: "¡Gracias por confirmar!",
-        description: "Serás redirigido a WhatsApp para enviar tu mensaje.",
-    });
-
-    setGuestName('');
+    // Store guest count in session storage for the guest login page
+    sessionStorage.setItem('guestCount', guestCount.toString());
+    // Redirect to guest login page for confirmation
+    router.push('/guest-login');
   };
 
   if (!isOpened) {
     return (
       <main 
-        className="flex min-h-screen flex-col items-center justify-center bg-background p-4 cursor-pointer" 
+        className="flex min-h-screen flex-col items-center justify-center p-4 cursor-pointer" 
         onClick={handleOpenEnvelope}
       >
         <div className="text-center animate-in fade-in duration-1000">
@@ -144,118 +111,114 @@ export default function InvitationPage({ params }: { params: { count: string } }
 
   return (
     <main className="flex flex-col items-center justify-center min-h-screen bg-background text-foreground relative overflow-auto sm:overflow-hidden">
-      <Image 
-        src="/flowers_deco/elegant-background.jpeg"
-        fill
-        alt="Elegant event background" 
-        className="absolute inset-0 z-[-1] opacity-20 filter blur-sm object-cover"
-        priority
-        data-ai-hint="elegant floral"
-      />
+
+      <div className="mt-16 animate-in fade-in duration-1000 delay-400 mb-4 sm:mb-6 w-screen relative -mx-4 sm:-mx-8 md:-mx-16 lg:-mx-24 xl:-mx-32">
+        <div className="w-[110%] -ml-5%] relative">
+          <Image 
+            src="/cover.png" 
+            alt="Wedding Cover" 
+            width={800} 
+            height={600} 
+            className="w-full h-auto object-cover" 
+            data-ai-hint="wedding cover"
+          />
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center">
+            <h1 className="text-5xl sm:text-5xl text-primary flex flex-col items-center justify-center">
+              <span className="font-richford drop-shadow-lg">Kevin Zuniga</span>
+              <span className="font-eve-adam text-2xl sm:text-2xl my-2 drop-shadow-lg">&</span>
+              <span className="font-richford drop-shadow-lg">Alison Ney</span>
+            </h1>
+
+            <div className="mt-8 flex flex-col items-center justify-center w-[40%]">
+              <EventDateDisplay 
+                monthName="Diciembre"
+                dayName="Viernes"
+                dayNumber="20"
+                year="2025"
+                time="6:00 PM"
+                className="mt-12 animate-in fade-in duration-1000 delay-700 text-primary"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
       
       <div 
-        className="relative z-10 flex flex-col items-center text-center max-w-2xl w-full bg-background/80 dark:bg-neutral-900/80 backdrop-blur-md rounded-xl shadow-2xl my-8 animate-in fade-in slide-in-from-bottom-10 duration-700 bg-[url('/paper-texture.jpg')] bg-cover bg-center overflow-hidden"
+        className="relative z-10 flex flex-col items-center text-center max-w-2xl w-full rounded-xl shadow-2xl my-8 animate-in fade-in slide-in-from-bottom-10 duration-700 overflow-hidden"
       >
-        <div className="mt-12 relative z-10 flex flex-col items-center text-center space-y-8 sm:space-y-10 p-4 sm:p-8">
-        
-          <Card className="bg-transparent border-none shadow-none w-full animate-in fade-in duration-1000 delay-200">
-            <CardContent className="font-body text-lg sm:text-xl text-foreground/80 pt-6">
-              <p>
-                Tu Divino Amor, fuente inagotable de <br />Gracia, guíe nuestra unión para que sea <br />agradablea tus ojos y guardado en <br />tu corazón.
-              </p>
-            </CardContent>
-          </Card>
-
-          <div className="flex flex-col items-center mt-8 mb-6 animate-in fade-in duration-1000 delay-300">
-            <Image src="/ring.png" alt="Ring" width={300} height={300} data-ai-hint="ring" className="drop-shadow-lg"/>
-            <p className="font-headline text-2xl sm:text-3xl text-primary mt-2 tracking-widest">Nuestra Boda</p>
-          </div>
-
-          <div className="animate-in fade-in duration-1000 delay-400 mb-4 sm:mb-6 w-full text-center">
-            <h1 className="text-4xl sm:text-5xl text-primary flex flex-col items-center justify-center">
-              <span className="font-richford">Axel Tercero</span>
-              <span className="font-eve-adam text-2xl sm:text-2xl my-2">&</span>
-              <span className="font-richford">Julissa Meléndez</span>
-            </h1>
-          </div>
-          
-          <MusicPlayer audioSrc={audioSrc} autoPlay={isOpened} className="animate-in fade-in duration-1000 delay-500" />
-
-          <Card className="bg-transparent border-none shadow-none w-full animate-in fade-in duration-1000 delay-600">
-            <CardContent className="font-body text-lg sm:text-xl text-foreground/80 pt-6">
-              <p>
-               Con la bendición de Dios y nuestros padres<br />Unimos nuestras vidas en Matrimonio y seria un honor<br />contar con su presencia en este dia tan especial.
-              </p>
-            </CardContent>
-          </Card>
-
-          <EventDateDisplay 
-            monthName="Agosto"
-            dayName="Sábado"
-            dayNumber="16"
-            year="2025"
-            time="6:00 PM"
-            className="animate-in fade-in duration-1000 delay-700 text-primary"
-          />
-        </div>
-
-        <div className="w-full bg-[#f4f0ed] my-8 py-8 animate-in fade-in duration-1000 delay-800 flex flex-col items-center justify-center gap-6">
-          <div className="w-full max-w-md mx-auto">
+        <div className="w-full my-8 py-8 animate-in fade-in duration-1000 delay-800 flex flex-col items-center justify-center gap-6 relative">
+          <div className="w-full max-w-lg mx-auto relative z-10">
             <CountdownTimer targetDate={eventTargetDate} />
           </div>
+
           <AddToCalendarButton 
-             event={{
-                title: "Nuestra Boda - Axel & Julissa",
+            event={{
+                title: "Nuestra Boda - Alison Ney & Kevin Zuniga",
                 description: "¡Acompáñanos a celebrar nuestra unión! Te esperamos para compartir este día tan especial.",
-                location: "Restaurante El Horizonte, Carretera Chinandega",
-                receptionLocation: "https://maps.app.goo.gl/SzXAqsLcjhAFVoXa9?g_st=iw",
-                ceremonyLocation: "https://maps.app.goo.gl/EnDGVqjE2e7bHwrK9?g_st=iw",
+                location: "Barrio San Judas, casa de habitación",
+                ceremonyLocation: "https://maps.app.goo.gl/U5ZiL6hu6SSVn8m8A",
                 startTime: eventTargetDate,
-                endTime: "2025-08-17T02:00:00-06:00",
+                endTime: "2025-12-21T02:00:00-06:00",
                 timeZone: "America/Managua",
-             }}
+            }}
+          />
+        </div>
+          
+          <MusicPlayer audioSrc={audioSrc} autoPlay={isOpened} className="mt-12 mb-12 animate-in fade-in duration-1000 delay-500" />
+
+        <div className="mt-12 relative z-10 flex flex-col items-center text-center space-y-8 sm:space-y-10 px-2 sm:px-4">
+          
+        </div>
+        
+        {/* Separador superior - 100% ancho */}
+        <div className="w-screen relative -mx-4 sm:-mx-8 md:-mx-16 lg:-mx-24 xl:-mx-32 z-20">
+          <Image 
+            src="/separador.png" 
+            alt="Separador decorativo" 
+            width={1920} 
+            height={100} 
+            className="w-full h-auto animate-in fade-in duration-1000 delay-100 opacity-100" 
+            data-ai-hint="decorative separator"
           />
         </div>
 
-        <Image 
-            src="/decor_image3.png"
-            alt="Decoration Image"
-            width={250}
-            height={100}
-            className="mx-auto my-4"
-            data-ai-hint="pink flower"
+        <div className="relative z-10 flex flex-col items-center text-center space-y-8 sm:space-y-10 px-2 sm:px-4">
+          <Card className="border-none shadow-none w-full animate-in fade-in duration-1000 delay-200">
+            <CardContent className="font-body text-lg sm:text-xl text-foreground/80 pt-6">
+              <p>
+                ... No me ruegues que te deje y que me aparte de ti; porque adondequiera que tú fueres, iré yo, y dondequiera que vivieres, viviré. Tu pueblo será mi pueblo, y tu Dios mi Dios.
+              </p>
+              <p className='mt-2 text-foreground/50'>- Ruth 1:16</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Separador inferior - 100% ancho */}
+        <div className="w-screen relative -mx-4 sm:-mx-8 md:-mx-16 lg:-mx-24 xl:-mx-32 z-20">
+          <Image 
+            src="/separador.png" 
+            alt="Separador decorativo rotado" 
+            width={1920} 
+            height={100} 
+            className="w-full h-auto animate-in fade-in duration-1000 delay-250 opacity-100 rotate-180" 
+            data-ai-hint="decorative separator rotated"
           />
+        </div>
         
-        <div className="flex flex-col items-center text-center space-y-8 sm:space-y-10 p-4 sm:p-8 pt-0">
-          
-          <div className="w-full animate-in fade-in duration-1000 delay-1000">
-            <SectionCard
-              title="Ceremonia Religiosa"
-              locationButton={{ text: "Ver Ubicación", url: "https://maps.app.goo.gl/EnDGVqjE2e7bHwrK9?g_st=iw" }}
-              titleClassName="text-primary"
-            >
-              <div className="flex flex-col items-center space-y-2 mb-3">
-                 <Image src="/church.png" alt="Iglesia Icon" width={40} height={40} className="shrink-0" data-ai-hint="church building"/>
-              </div>
-              <div className="mt-1 space-y-1 text-center">
-                <p className="flex items-center justify-center">Iglesia Parroquial San Blas</p>
-                <p className="flex items-center justify-center"><i>Chichigalpa, 4:30 PM</i></p>
-              </div>
-            </SectionCard>
-          </div>
-          
+        <div className="flex flex-col items-center text-center space-y-8 sm:space-y-10 px-2 sm:px-4 pt-0">
+        
           <div className="w-full animate-in fade-in duration-1000 delay-1100">
             <SectionCard 
-              title="Recepción"
-              locationButton={{ text: "Ver Ubicación", url: "https://maps.app.goo.gl/SzXAqsLcjhAFVoXa9?g_st=iw" }}
-              titleClassName="text-primary"
+              title="Ceramonia & Recepción"
+              locationButton={{ text: "Ver Ubicación", url: "https://maps.app.goo.gl/U5ZiL6hu6SSVn8m8A" }}
+              titleClassName="font-richford text-primary"
             >
               <div className="flex flex-col items-center space-y-2 mb-3">
                 <Image src="/champagne.png" alt="champagne Icon" width={40} height={40} className="shrink-0" data-ai-hint="champagne"/>
               </div>
               <div className="mt-1 space-y-1 text-center">
-                <p className="flex items-center justify-center">Restaurante El Horizonte</p>
-                <p className="flex items-center justify-center"><i>Carretera Chinandega, 6:00 PM</i></p>
+                <p className="flex items-center justify-center">Barrio San Judas</p>
+                <p className="flex items-center justify-center"><i>Casa de habitación, 6:00 PM</i></p>
               </div>
             </SectionCard>
           </div>
@@ -263,7 +226,7 @@ export default function InvitationPage({ params }: { params: { count: string } }
           <div className="w-full animate-in fade-in duration-1000 delay-[1300ms]">
             <SectionCard 
               title="Código de Vestimenta"
-              titleClassName="text-primary"
+              titleClassName="font-richford text-primary"
             >
               <div>
                 <p className='text-sm sm:text-base font-bold'>Formal</p>
@@ -273,59 +236,64 @@ export default function InvitationPage({ params }: { params: { count: string } }
             </SectionCard>
           </div>
           
-          <div className="w-full animate-in fade-in duration-1000 delay-[1400ms]">
-            <SectionCard 
-              title="Pase Personal" 
-              icon={<UserCheck size={28} className="text-primary"/>}
-              titleClassName="text-primary"
-            >
-              <p className="text-lg sm:text-xl font-bold text-foreground/90">
-                Invitación Válida para {guestCount} persona{guestCount > 1 ? 's' : ''}
-              </p>
-               <p className="text-sm text-foreground/70 mt-2 px-4">
-                 Este pase es personal e intransferible.
-               </p>
-            </SectionCard>
-          </div>
+          {/* Información Importante - Timeline */}
+          <div className="w-full max-w-2xl mx-auto px-6 py-8">
+            {/* Encabezado principal */}
+            <div className="text-center mb-12">
+              <h2 className="font-richford text-3xl text-primary italic font-bold">
+                Información Importante
+              </h2>
+            </div>
 
-          <div className="w-full animate-in fade-in duration-1000 delay-[1500ms]">
-            <SectionCard 
-              title="Regalos" 
-              icon={<Gift size={28} className="text-primary"/>}
-              titleClassName="text-primary"
-            >
-              <p className="flex items-center justify-center gap-2">
-                <span>Agradecemos sus muestras de cariño en sobre.</span>
-              </p>
-            </SectionCard>
-          </div>
+            {/* Timeline */}
+            <div className="space-y-8">
+              {/* Item 1 - Pase Personal */}
+              <div className="flex items-start gap-4 animate-in fade-in duration-1000 delay-[1400ms]">
+                <span className="text-primary font-bold text-2xl">1</span>
+                <div className="w-px h-20 bg-primary/30 mt-1"></div>
+                <div className="flex-1 text-left">
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">Pase Personal</h3>
+                  <p className="text-lg font-semibold text-gray-700 mb-1">
+                    Invitación válida para {guestCount} persona{guestCount > 1 ? 's' : ''}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    Este pase es personal e intransferible.
+                  </p>
+                </div>
+              </div>
 
-          <div className="w-full animate-in fade-in duration-1000 delay-[1700ms]">
-             <SectionCard
-              title="Nota Importante"
-              icon={<Info size={24} className="text-primary" />}
-              titleClassName="text-primary"
-             >
-                <p className="text-base sm:text-lg text-foreground/90 px-4">
-                  Le pedimos amablemente su presencia sin niños.
-                </p>
-             </SectionCard>
+              {/* Item 2 - Regalos */}
+              <div className="flex items-start gap-4 animate-in fade-in duration-1000 delay-[1500ms]">
+                <span className="text-primary font-bold text-2xl">2</span>
+                <div className="w-px h-16 bg-primary/30 mt-1"></div>
+                <div className="flex-1 text-left">
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">Regalos</h3>
+                  <p className="text-base text-gray-700">
+                    Agradecemos sus muestras de cariño en sobre.
+                  </p>
+                </div>
+              </div>
+
+              {/* Item 3 - Nota Importante */}
+              <div className="flex items-start gap-4 animate-in fade-in duration-1000 delay-[1700ms]">
+                <span className="text-primary font-bold text-2xl">3</span>
+                <div className="w-px h-16 bg-primary/30 mt-1"></div>
+                <div className="flex-1 text-left">
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">Nota Importante</h3>
+                  <p className="text-base text-gray-700">
+                    Le pedimos amablemente su presencia sin niños.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         
         <div 
           className="relative w-full bg-[url('/flowers_deco/flower2.png')] bg-contain bg-no-repeat bg-bottom"
         >
-          <div className="flex flex-col items-center pt-10 pb-24 px-4">
+          <div className="flex flex-col items-center pt-10 px-2">
             <div className="flex flex-col items-center animate-in fade-in duration-1000 delay-[200ms] w-full max-w-xs">
-              <Input
-                type="text"
-                placeholder="Nombre y Apellido"
-                value={guestName}
-                onChange={(e) => setGuestName(e.target.value)}
-                className="mt-4 mb-3 bg-white/80 border-primary text-center w-full max-w-[280px] placeholder:text-foreground/50"
-                aria-label="Tu nombre y apellido"
-              />
               <Button
                 onClick={handleConfirm}
                 className="bg-primary hover:bg-primary/90 text-primary-foreground font-headline text-xl py-3 px-6 sm:py-4 sm:px-8 rounded-lg shadow-lg hover:shadow-xl transition-all transform hover:scale-105 w-full mb-2"
@@ -334,14 +302,25 @@ export default function InvitationPage({ params }: { params: { count: string } }
                 Confirmar Asistencia
               </Button>
               <p className="text-sm text-foreground/80 mt-2 text-center">
-                Fecha Límite de confirmación 30 de Julio
+                Fecha Límite de confirmación 28 de Noviembre 2025
               </p>
             </div>
           </div>
         </div>
 
+        {/* Separador antes del footer */}
+        <div className="w-full">
+          <Image 
+            src="/separador2.png" 
+            alt="Separador decorativo" 
+            width={1200} 
+            height={100} 
+            className="w-full h-auto object-cover" 
+          />
+        </div>
+
         {/* Footer */}
-        <footer className="w-full text-center py-4 bg-background/80 dark:bg-neutral-900/80 text-foreground/60 text-xs bg-[url('/paper-texture.jpg')] bg-cover bg-center backdrop-blur-md">
+        <footer className="w-full text-center py-4 text-foreground/60 text-xs backdrop-blur-md">
           <a 
             href="https://www.instagram.com/invitaciones_digitales_505?utm_source=ig_web_button_share_sheet&igsh=cWl4ZGN1ZjR3ODlw" 
             target="_blank" 
