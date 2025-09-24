@@ -165,7 +165,10 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
       <div 
         className="relative z-10 flex flex-col items-center text-center max-w-2xl w-full rounded-xl shadow-2xl my-8 animate-in fade-in slide-in-from-bottom-10 duration-700 overflow-hidden"
       >
+        <MusicPlayer audioSrc={audioSrc} autoPlay={isOpened} className="mt-12 mb-12 animate-in fade-in duration-1000 delay-500" />
+
         <div className="w-full my-8 py-8 animate-in fade-in duration-1000 delay-800 flex flex-col items-center justify-center gap-6 relative">
+
           <div className="w-full max-w-lg mx-auto relative z-10">
             <CountdownTimer targetDate={eventTargetDate} />
           </div>
@@ -182,8 +185,6 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
             }}
           />
         </div>
-          
-          <MusicPlayer audioSrc={audioSrc} autoPlay={isOpened} className="mt-12 mb-12 animate-in fade-in duration-1000 delay-500" />
 
         <div className="mt-12 relative z-10 flex flex-col items-center text-center space-y-8 sm:space-y-10 px-2 sm:px-4">
           
