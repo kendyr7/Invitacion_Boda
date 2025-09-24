@@ -124,14 +124,14 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
   return (
     <main className="flex flex-col items-center justify-center min-h-screen text-foreground relative overflow-x-hidden">
 
-      <div className="mt-16 animate-in fade-in duration-1000 delay-400 mb-4 sm:mb-6 w-screen relative -mx-4 sm:-mx-8 md:-mx-16 lg:-mx-24 xl:-mx-32">
-        <div className="w-[110%] -ml-5%] relative">
+      <div className="mt-16 animate-in fade-in duration-1000 delay-400 mb-4 sm:mb-6 w-full flex justify-center">
+        <div className="relative w-full max-w-4xl mx-auto">
           <Image 
             src="/cover.png" 
             alt="Wedding Cover" 
             width={800} 
             height={600} 
-            className="w-full h-auto object-cover" 
+            className="w-full h-auto object-cover mx-auto" 
             data-ai-hint="wedding cover"
           />
           <div className="absolute inset-0 z-10 flex flex-col items-center justify-center">
@@ -140,19 +140,23 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
               <span className="font-eve-adam text-2xl sm:text-2xl my-2 drop-shadow-lg">&</span>
               <span className="font-richford drop-shadow-lg">Alison</span>
             </h1> */}
-            <img 
-              src="/Kevin y Alison.svg" 
-              alt="Kevin y Alison" 
-              className="w-auto h-55 sm:h-40 drop-shadow-lg"
-            />
-            <EventDateDisplay 
-              monthName="Diciembre"
-              dayName="Viernes"
-              dayNumber="20"
-              year="2025"
-              time="6:00 PM"
-              className="mt-4 animate-in fade-in duration-1000 delay-700 text-primary scale-75 sm:scale-90"
-            />
+            <div className="flex justify-center w-full">
+              <img 
+                src="/Kevin y Alison.svg" 
+                alt="Kevin y Alison" 
+                className="w-auto h-50 sm:h-40 drop-shadow-lg mx-auto"
+              />
+            </div>
+            <div className="mt-4 flex flex-col items-center justify-center w-full max-w-md mx-auto">
+              <EventDateDisplay 
+                monthName="Diciembre"
+                dayName="Viernes"
+                dayNumber="20"
+                year="2025"
+                time="6:00 PM"
+                className="animate-in fade-in duration-1000 delay-700 text-primary scale-75 sm:scale-90"
+              />
+            </div>
           </div>
         </div>
       </div>
