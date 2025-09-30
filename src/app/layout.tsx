@@ -59,6 +59,9 @@ export const metadata: Metadata = {
     shortcut: '/favicon.svg',
     apple: '/favicon.svg',
   },
+  other: {
+    'color-scheme': 'light only',
+  },
 };
 
 export default function RootLayout({
@@ -67,7 +70,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning style={{ colorScheme: 'light' }}>
       <body 
         className={cn(
           "font-body antialiased",
@@ -77,6 +80,7 @@ export default function RootLayout({
           richford.variable
         )} 
         suppressHydrationWarning
+        style={{ colorScheme: 'light' }}
       >
         <AppProviders>
           {children}

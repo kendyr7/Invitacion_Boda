@@ -144,7 +144,7 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
               <img 
                 src="/Kevin y Alison.svg" 
                 alt="Kevin y Alison" 
-                className="w-auto h-50 sm:h-40 drop-shadow-lg mx-auto"
+                className="w-auto h-40 sm:h-40 drop-shadow-lg mx-auto"
               />
             </div>
             <div className="mt-4 flex flex-col items-center justify-center w-full max-w-md mx-auto">
