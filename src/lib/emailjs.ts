@@ -32,7 +32,7 @@ export async function sendConfirmationNotification(data: NotificationData): Prom
     emailjs.init(EMAILJS_PUBLIC_KEY);
 
     const templateParams = {
-      to_email: 'invitacionesdigitales505@gmail.com',
+      to_email: 'alisonney4life2021@gmail.com',
       guest_name: data.guestName,
       number_of_guests: data.numberOfGuests,
       confirmation_date: data.confirmationDate,
