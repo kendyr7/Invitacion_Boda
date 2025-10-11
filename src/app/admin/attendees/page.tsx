@@ -303,9 +303,9 @@ export default function AttendeesPage() {
 
   const handleClearDatabase = async () => {
     // Check if password is correct (you can change this password)
-    const ADMIN_PASSWORD = "admin2024";
+    const ADMIN_PASSWORD = "admin2025";
     
-    if (deletePassword !== ADMIN_PASSWORD) {
+    if (deletePassword.trim() !== ADMIN_PASSWORD) {
       toast({
         title: "Error",
         description: "Contraseña incorrecta. No se puede proceder con la eliminación.",

@@ -179,7 +179,7 @@ export default function ConfirmationPage() {
       // Send email notification
       const notificationSent = await sendConfirmationNotification({
         guestName: guestNames.join(', '), // Join names for email
-        numberOfGuests: 1,
+        numberOfGuests: guestCount,
         confirmationDate: new Date().toLocaleDateString('es-NI', {
           year: 'numeric',
           month: 'long',
@@ -467,7 +467,7 @@ setConfirmationStatus({ isConfirmed: false });
                 <MapPin className="h-5 w-5 text-primary" />
                 <div>
                   <p className="font-semibold">Lugar</p>
-                  <p className="text-sm text-foreground/70">Barrio San Judas, casa de habitación</p>
+                  <p className="text-sm text-foreground/70">Barrio San Judas, De la parada del nancite 2 C abajo 1/2 C al Sur, casa porton negro</p>
                 </div>
               </div>
               

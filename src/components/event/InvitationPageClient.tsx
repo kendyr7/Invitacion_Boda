@@ -177,7 +177,7 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
             event={{
                 title: "Nuestra Boda - Alison Ney & Kevin Zuniga",
                 description: "¡Acompáñanos a celebrar nuestra unión! Te esperamos para compartir este día tan especial.",
-                location: "Barrio San Judas, casa de habitación",
+                location: "Barrio San Judas, De la parada del nancite 2 C abajo 1/2 C al Sur, casa porton negro",
                 ceremonyLocation: "https://maps.app.goo.gl/U5ZiL6hu6SSVn8m8A",
                 startTime: eventTargetDate,
                 endTime: "2025-12-21T02:00:00-06:00",
@@ -239,7 +239,7 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
               </div>
               <div className="mt-1 space-y-1 text-center">
                 <p className="flex items-center justify-center">Barrio San Judas</p>
-                <p className="flex items-center justify-center"><i>Casa de habitación</i></p>
+                <p className="flex items-center justify-center"><i>De la parada del nancite 2 C abajo 1/2 C al Sur, casa porton negro</i></p>
               </div>
             </SectionCard>
           </div>
