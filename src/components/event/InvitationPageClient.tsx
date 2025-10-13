@@ -150,7 +150,7 @@ export default function InvitationPageClient({ guestCount }: { guestCount: numbe
             <div className="mt-4 flex flex-col items-center justify-center w-full max-w-md mx-auto">
               <EventDateDisplay 
                 monthName="Diciembre"
-                dayName="Viernes"
+                dayName="Sábado"
                 dayNumber="20"
                 year="2025"
                 time="6:00 PM"

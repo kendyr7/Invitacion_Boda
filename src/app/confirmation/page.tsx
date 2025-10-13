@@ -451,7 +451,7 @@ setConfirmationStatus({ isConfirmed: false });
                 <Calendar className="h-5 w-5 text-primary" />
                 <div>
                   <p className="font-semibold">Fecha</p>
-                  <p className="text-sm text-foreground/70">Viernes, 20 de Diciembre 2025</p>
+                  <p className="text-sm text-foreground/70">Sábado, 20 de Diciembre 2025</p>
                 </div>
               </div>
               
